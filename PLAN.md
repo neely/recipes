@@ -32,11 +32,17 @@ Live at **recipes.benneely.com** · Repo: github.com/neely/recipes
 - Sorting: by tag, cook time, date added (client-side JS, no server)
 - Mobile-first card layout, consistent with recipe page aesthetic
 
+## ✓ Phase 3.5 — Engine improvements
+- Implemented `scalable: false` + `label` field (per-ingredient, not per-recipe) — applied to renderQty() in both recipe-template.html and king-ranch-chicken.html
+- Formalized `image` field in recipes.js manifest — path convention, 4:3 aspect ratio, fallback card design
+- Added Screen Wake Lock to every recipe page — mobile-first requirement, phone shouldn't sleep mid-cook
+
 ## Phase 4 — style.css extraction
 - Extract shared design tokens and base styles into style.css
 - Update all recipe pages to `<link rel="stylesheet" href="../style.css">`
 - Do this after 2–3 recipes exist so the shared shape is clear
 - Recipes stay self-contained in data (INGREDIENTS, COOK_STEPS, DIRECTIONS)
+- **Decide:** does this phase also extract the shared JS engine (fmtQtyUnit, renderQty, wake lock, etc.) into a shared file? It's currently duplicated in full per recipe file, same problem as the CSS.
 
 ## Phase 5 — Recipe ingestion
 - Ongoing: add recipes one at a time via Claude Project
@@ -45,6 +51,5 @@ Live at **recipes.benneely.com** · Repo: github.com/neely/recipes
 
 ## Future / if needed
 - **Print view** — scope to Recipe tab only (currently shows all panels)
-- **`scalable: false`** — flag non-scaling ingredients (salt to taste, oil for frying)
 - **Offline / PWA** — service worker if kitchen wifi is unreliable
 - **Last made / frequency** — track which recipes get used most (would need localStorage or a backend)
