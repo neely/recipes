@@ -18,7 +18,7 @@ Live at **recipes.benneely.com** · Repo: github.com/neely/recipes
 - Cook step segment schema (ingredient refs re-render on scale change)
 - Mise en Place checklist with progress bar and reset
 - Cook mode: dark panel, swipe nav, sticky bottom bar, progress bar
-- Reference implementation: harissa-chicken-thighs.html
+- Reference implementation: king-ranch-chicken.html
 
 ## ✓ Phase 2 — Repo setup
 - Files pushed to neely/recipes via GitHub API
@@ -26,7 +26,7 @@ Live at **recipes.benneely.com** · Repo: github.com/neely/recipes
 - recipe-template.html, recipes.js manifest, PROJECT_INSTRUCTIONS.md committed
 - README, NOTES, PLAN added
 
-## Phase 3 — Index / landing page
+## ✓ Phase 3 — Index / landing page
 - Build index.html that reads recipes.js and renders recipe cards
 - Each card: title, tags, prep+cook time, serves, skill level, link to recipe
 - Sorting: by tag, cook time, date added (client-side JS, no server)
