@@ -184,7 +184,7 @@ When bringing in a new recipe:
 |------|---------|
 | `PROJECT_INSTRUCTIONS.md` | This document — paste into Project instructions |
 | `recipe-template.html` | Blank recipe shell to copy for each new recipe |
-| `recipes.js` | Starter manifest with harissa chicken entry |
-| `harissa-chicken-thighs.html` | First recipe, fully built, use as design reference |
+| `recipes.js` | Manifest with king ranch chicken entry |
+| `recipes/king-ranch-chicken.html` | First recipe, fully built, use as design reference |
 
-The recipe template and harissa chicken HTML are the canonical reference implementations. When in doubt about structure or style, look at the harissa chicken file.
+The recipe template and king ranch chicken HTML are the canonical reference implementations. When in doubt about structure or style, look at the king ranch chicken file.
