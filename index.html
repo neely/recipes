@@ -1,21 +1,427 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta http-equiv="Content-Style-Type" content="text/css">
-  <title></title>
-  <meta name="Generator" content="Cocoa HTML Writer">
-  <meta name="CocoaVersion" content="2685.4">
-  <style type="text/css">
-    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000}
-    span.s1 {font-kerning: none}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Recipes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400;1,700&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --cream: #f7f3ec;
+    --ink: #1a1208;
+    --rust: #c4440a;
+    --rust-light: #e8623a;
+    --warm-gray: #8a7f72;
+    --border: #ddd5c4;
+    --white: #fffdf8;
+    --step-bg: #161009;
+  }
+
+  html, body {
+    background: var(--cream);
+    font-family: 'DM Sans', sans-serif;
+    color: var(--ink);
+  }
+
+  .site-header {
+    padding: 30px 22px 22px;
+    border-bottom: 1px solid var(--border);
+    background: var(--white);
+  }
+
+  .site-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 9.5px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--rust);
+    display: block;
+    margin-bottom: 8px;
+  }
+
+  .site-title {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    font-size: clamp(30px, 8vw, 42px);
+    line-height: 1.05;
+    letter-spacing: -0.4px;
+    margin-bottom: 10px;
+  }
+
+  .site-tagline {
+    font-style: italic;
+    font-size: 14.5px;
+    color: var(--warm-gray);
+    max-width: 480px;
+    line-height: 1.5;
+  }
+
+  .controls {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 22px;
+  }
+
+  .controls-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    max-width: 900px;
+    margin: 0 auto;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .controls-row::-webkit-scrollbar { display: none; }
+
+  .controls-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--warm-gray);
+    flex-shrink: 0;
+  }
+
+  .sort-pill {
+    flex-shrink: 0;
+    padding: 5px 12px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: transparent;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--warm-gray);
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+
+  .sort-pill.active {
+    border-color: var(--rust);
+    background: var(--rust);
+    color: white;
+  }
+
+  .tag-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    max-width: 900px;
+    margin: 10px auto 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .tag-row::-webkit-scrollbar { display: none; }
+
+  .tag-pill {
+    flex-shrink: 0;
+    padding: 4px 10px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: transparent;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.02em;
+    color: var(--warm-gray);
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+
+  .tag-pill.active {
+    border-color: var(--ink);
+    color: var(--ink);
+    background: var(--border);
+  }
+
+  .grid-wrap {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 24px 22px 64px;
+  }
+
+  .recipe-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  @media (min-width: 620px) {
+    .recipe-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (min-width: 920px) {
+    .recipe-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  .recipe-card {
+    display: block;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+    text-decoration: none;
+    color: var(--ink);
+    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+  }
+
+  .recipe-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--rust);
+    box-shadow: 0 8px 20px rgba(26, 18, 8, 0.08);
+  }
+
+  .card-media {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    background: var(--step-bg);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .card-media.no-image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .card-media.no-image .card-initial {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-weight: 700;
+    font-size: 46px;
+    color: var(--rust-light);
+    opacity: 0.85;
+  }
+
+  .card-added {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--cream);
+    background: rgba(22, 16, 9, 0.55);
+    padding: 3px 7px;
+    border-radius: 10px;
+  }
+
+  .card-body { padding: 16px 16px 15px; }
+
+  .card-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--rust);
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  .card-title {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 19px;
+    line-height: 1.2;
+    margin-bottom: 10px;
+  }
+
+  .card-meta-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .card-meta-item {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+  }
+
+  .card-meta-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--warm-gray);
+  }
+
+  .card-meta-value {
+    font-size: 11.5px;
+    font-weight: 500;
+  }
+
+  .card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .card-tag-chip {
+    font-family: 'DM Mono', monospace;
+    font-size: 9.5px;
+    color: var(--warm-gray);
+    background: var(--cream);
+    border: 1px solid var(--border);
+    padding: 3px 8px;
+    border-radius: 10px;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--warm-gray);
+  }
+
+  .empty-state .eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--rust);
+    display: block;
+    margin-bottom: 10px;
+  }
+
+  .empty-state h2 {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-weight: 400;
+    font-size: 22px;
+    color: var(--ink);
+  }
+</style>
 </head>
 <body>
-<p class="p1"><span class="s1">&lt;!DOCTYPE html&gt;</span></p>
-<p class="p1"><span class="s1">&lt;html&gt;</span></p>
-<p class="p1"><span class="s1">&lt;head&gt;&lt;title&gt;Recipes&lt;/title&gt;&lt;/head&gt;</span></p>
-<p class="p1"><span class="s1">&lt;body&gt;&lt;h1&gt;Coming Soon&lt;/h1&gt;&lt;/body&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/html&gt;</span></p>
+
+<div class="site-header">
+  <span class="site-eyebrow">The Recipe Box</span>
+  <h1 class="site-title">Recipes</h1>
+  <p class="site-tagline">A running collection of what actually gets cooked — scalable, checkable, and readable from across the kitchen.</p>
+</div>
+
+<div class="controls">
+  <div class="controls-row" id="sort-row">
+    <span class="controls-label">Sort</span>
+    <button class="sort-pill active" data-sort="added-desc">Newest</button>
+    <button class="sort-pill" data-sort="added-asc">Oldest</button>
+    <button class="sort-pill" data-sort="total-asc">Quickest</button>
+    <button class="sort-pill" data-sort="title-asc">A–Z</button>
+  </div>
+  <div class="tag-row" id="tag-row"></div>
+</div>
+
+<div class="grid-wrap">
+  <div class="recipe-grid" id="recipe-grid"></div>
+</div>
+
+<script src="recipes.js"></script>
+<script>
+  let sortMode = 'added-desc';
+  let activeTag = null;
+
+  function fmtTime(mins) {
+    if (mins < 60) return mins + ' min';
+    const h = Math.floor(mins / 60), m = mins % 60;
+    return m === 0 ? (h + ' hr') : (h + ' hr ' + m + ' min');
+  }
+
+  function allTags() {
+    const set = new Set();
+    RECIPES.forEach(r => r.tags.forEach(t => set.add(t)));
+    return [...set].sort();
+  }
+
+  function renderTagRow() {
+    const tags = allTags();
+    document.getElementById('tag-row').innerHTML =
+      '<button class="tag-pill' + (activeTag === null ? ' active' : '') + '" data-tag="">All</button>' +
+      tags.map(t => '<button class="tag-pill' + (activeTag === t ? ' active' : '') + '" data-tag="' + t + '">' + t + '</button>').join('');
+
+    document.querySelectorAll('.tag-pill').forEach(btn => {
+      btn.addEventListener('click', () => {
+        activeTag = btn.dataset.tag || null;
+        renderTagRow();
+        renderGrid();
+      });
+    });
+  }
+
+  function sortRecipes(list) {
+    const sorted = [...list];
+    switch (sortMode) {
+      case 'added-desc': return sorted.sort((a, b) => b.added.localeCompare(a.added));
+      case 'added-asc':  return sorted.sort((a, b) => a.added.localeCompare(b.added));
+      case 'total-asc':  return sorted.sort((a, b) => (a.prepMins + a.cookMins) - (b.prepMins + b.cookMins));
+      case 'title-asc':  return sorted.sort((a, b) => a.title.localeCompare(b.title));
+      default: return sorted;
+    }
+  }
+
+  function cardHtml(r) {
+    const media = r.image
+      ? '<div class="card-media"><img src="' + r.image + '" alt="' + r.title + '" loading="lazy"></div>'
+      : '<div class="card-media no-image"><span class="card-initial">' + r.title.charAt(0) + '</span></div>';
+
+    return '<a class="recipe-card" href="recipes/' + r.slug + '.html">' +
+      '<div style="position:relative;">' + media +
+      '<span class="card-added">' + r.added + '</span></div>' +
+      '<div class="card-body">' +
+      '<span class="card-tag">' + r.tags.slice(0, 3).join(' · ') + '</span>' +
+      '<div class="card-title">' + r.title + '</div>' +
+      '<div class="card-meta-row">' +
+      '<div class="card-meta-item"><span class="card-meta-label">Total</span><span class="card-meta-value">' + fmtTime(r.prepMins + r.cookMins) + '</span></div>' +
+      '<div class="card-meta-item"><span class="card-meta-label">Serves</span><span class="card-meta-value">' + r.serves + '</span></div>' +
+      '<div class="card-meta-item"><span class="card-meta-label">Skill</span><span class="card-meta-value">' + (r.skill.charAt(0).toUpperCase() + r.skill.slice(1)) + '</span></div>' +
+      '</div>' +
+      '<div class="card-tags">' + r.tags.map(t => '<span class="card-tag-chip">' + t + '</span>').join('') + '</div>' +
+      '</div></a>';
+  }
+
+  function renderGrid() {
+    let list = activeTag ? RECIPES.filter(r => r.tags.includes(activeTag)) : RECIPES;
+    list = sortRecipes(list);
+
+    const grid = document.getElementById('recipe-grid');
+    const existingEmpty = document.getElementById('empty-state');
+    if (existingEmpty) existingEmpty.remove();
+
+    if (list.length === 0) {
+      grid.innerHTML = '';
+      grid.insertAdjacentHTML('afterend', '<div class="empty-state" id="empty-state"><span class="eyebrow">Nothing here yet</span><h2>No recipes match that filter.</h2></div>');
+    } else {
+      grid.innerHTML = list.map(cardHtml).join('');
+    }
+  }
+
+  document.querySelectorAll('.sort-pill').forEach(btn => {
+    btn.addEventListener('click', () => {
+      sortMode = btn.dataset.sort;
+      document.querySelectorAll('.sort-pill').forEach(p => p.classList.toggle('active', p === btn));
+      renderGrid();
+    });
+  });
+
+  renderTagRow();
+  renderGrid();
+</script>
 </body>
 </html>
