@@ -37,12 +37,12 @@ Live at **recipes.benneely.com** · Repo: github.com/neely/recipes
 - Formalized `image` field in recipes.js manifest — path convention, 4:3 aspect ratio, fallback card design
 - Added Screen Wake Lock to every recipe page — mobile-first requirement, phone shouldn't sleep mid-cook
 
-## Phase 4 — style.css extraction
-- Extract shared design tokens and base styles into style.css
-- Update all recipe pages to `<link rel="stylesheet" href="../style.css">`
-- Do this after 2–3 recipes exist so the shared shape is clear
-- Recipes stay self-contained in data (INGREDIENTS, COOK_STEPS, DIRECTIONS)
-- **Decide:** does this phase also extract the shared JS engine (fmtQtyUnit, renderQty, wake lock, etc.) into a shared file? It's currently duplicated in full per recipe file, same problem as the CSS.
+## ✓ Phase 4 — style.css + shared engine extraction
+- Extracted shared design tokens and base styles into `style.css`, linked from every recipe page as `../style.css`
+- Extracted the full render engine (scaling, `renderQty`/`ingSpan`, tabs, mise, cook mode, wake lock) into `recipe-engine.js`, loaded as `../recipe-engine.js`
+- Each recipe file is now just its HTML skeleton + `INGREDIENTS`/`COOK_STEPS`/`DIRECTIONS`/`BASE_SERVES` — king-ranch-chicken.html went from 393 lines to 210; recipe-template.html from 759 to 158
+- `index.html` also links `style.css` for its design tokens, dropping its own duplicate `:root` block
+- Any future engine bugfix or feature is now a single-file change instead of a per-recipe hand-edit
 
 ## Phase 5 — Recipe ingestion
 - Ongoing: add recipes one at a time via Claude Project
