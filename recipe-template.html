@@ -534,6 +534,8 @@
 // ═══════════════════════════════════════════════════════
 const INGREDIENTS = [
   { group:"",  qty:1,   unit:"",     name:"INGREDIENT NAME" },
+  // Non-scalable example (e.g. "salt to taste") — qty/unit are ignored, label displays instead:
+  // { group:"", qty:0, unit:"", name:"Salt", scalable:false, label:"To taste" },
   // add more...
 ];
 
@@ -604,9 +606,20 @@ function fmtQtyUnit(baseQty, baseUnit, sc) {
 
 function ingSpan(i, frac) {
   const ing = INGREDIENTS[i];
+  if (ing.scalable === false) {
+    return `<span class="ing-inline">${ing.label} ${ing.name}</span>`;
+  }
   const { qty, unit } = fmtQtyUnit(ing.qty * (frac ?? 1), ing.unit, scale);
   const unitStr = unit ? ` ${unit}` : '';
   return `<span class="ing-inline">${qty}${unitStr} ${ing.name}</span>`;
+}
+
+// Returns the display string for an ingredient's amount — either a scaled
+// qty+unit, or (for scalable:false ingredients) the fixed label as-is.
+function renderQty(ing) {
+  if (ing.scalable === false) return ing.label || '';
+  const { qty, unit } = fmtQtyUnit(ing.qty, ing.unit, scale);
+  return `${qty}${unit ? ' ' + unit : ''}`;
 }
 
 let scale = 1;
@@ -620,9 +633,7 @@ function renderRecipeIng() {
       html += `<li class="ing-group-title">${ing.group}</li>`;
       lastGroup = ing.group;
     }
-    const { qty, unit } = fmtQtyUnit(ing.qty, ing.unit, scale);
-    const unitStr = unit ? ` ${unit}` : '';
-    html += `<li class="ing-item"><span class="ing-qty">${qty}${unitStr}</span><span>${ing.name}</span></li>`;
+    html += `<li class="ing-item"><span class="ing-qty">${renderQty(ing)}</span><span>${ing.name}</span></li>`;
   });
   document.getElementById('recipe-ing-list').innerHTML = html;
 }
@@ -634,12 +645,10 @@ function renderDirections() {
 
 function renderMise() {
   document.getElementById('mise-list').innerHTML = INGREDIENTS.map((ing, i) => {
-    const { qty, unit } = fmtQtyUnit(ing.qty, ing.unit, scale);
-    const unitStr = unit ? ` ${unit}` : '';
     const chk = miseChecked.has(i);
     return `<li class="mise-item${chk ? ' checked' : ''}" onclick="toggleMise(${i})">
       <div class="mise-check"><span class="mise-check-icon">✓</span></div>
-      <div class="mise-text"><span class="mise-qty">${qty}${unitStr}</span> ${ing.name}</div>
+      <div class="mise-text"><span class="mise-qty">${renderQty(ing)}</span> ${ing.name}</div>
     </li>`;
   }).join('');
   const done = miseChecked.size, total = INGREDIENTS.length;
@@ -723,6 +732,27 @@ renderRecipeIng();
 renderDirections();
 renderMise();
 renderCookSteps();
+
+// ═══════════════════════════════════════════════════════
+// SCREEN WAKE LOCK — keep the phone awake while cooking.
+// Requests on load, releases automatically when the tab is
+// hidden/backgrounded, and re-acquires when it becomes visible
+// again. No-ops silently on browsers without support.
+// ═══════════════════════════════════════════════════════
+let wakeLock = null;
+async function requestWakeLock() {
+  if (!('wakeLock' in navigator)) return;
+  try {
+    wakeLock = await navigator.wakeLock.request('screen');
+    wakeLock.addEventListener('release', () => { wakeLock = null; });
+  } catch (err) {
+    // Fails silently — e.g. battery saver mode, unsupported, or permissions.
+  }
+}
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible') requestWakeLock();
+});
+requestWakeLock();
 </script>
 </body>
 </html>
