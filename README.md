@@ -59,6 +59,6 @@ See [PLAN.md](PLAN.md).
 
 Built on a phone through Claude (Sonnet 4.6), following the same workflow as [The Dial](https://radio.benneely.com) — Claude read and wrote the repo directly via a fine-grained GitHub PAT, Cloudflare Pages pointed at the subdomain before the first commit, every push immediately testable at recipes.benneely.com.
 
-The recipe format was designed iteratively in conversation before any code was committed: three-tab layout, scale logic, unit escalation rules, cook step segment schema. The harissa chicken thighs recipe is the canonical reference implementation.
+The recipe format was designed iteratively in conversation before any code was committed: three-tab layout, scale logic, unit escalation rules, cook step segment schema. The king ranch chicken casserole recipe is the canonical reference implementation.
 
 Fits Pattern 4 from the [App Patterns Field Guide](https://neely.github.io/patterns/) — static file host, GitHub as database, no write path from the browser.
