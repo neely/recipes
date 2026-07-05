@@ -14,8 +14,9 @@ Design constraint: every recipe is a self-contained HTML file. The landing page 
 
 ## Stack
 
-- One HTML file per recipe — no framework, no bundler, no dependencies beyond Google Fonts
-- Shared `style.css` for design tokens and base styles (once extracted)
+- Each recipe is a thin HTML file — markup + data only, no framework, no bundler
+- `style.css` — shared design tokens and base styles, used by every recipe page
+- `recipe-engine.js` — shared render engine (scaling, tabs, mise, cook mode, wake lock), used by every recipe page
 - `recipes.js` manifest drives the index page
 - Hosted on GitHub / Cloudflare Pages
 
@@ -24,12 +25,14 @@ Design constraint: every recipe is a self-contained HTML file. The landing page 
 ```
 recipes/
 ├── index.html              ← recipe listing / landing page
-├── style.css               ← shared design tokens (to be extracted)
-├── recipes.js              ← metadata manifest, one entry per recipe
-├── recipe-template.html    ← blank shell for new recipes
-├── PROJECT_INSTRUCTIONS.md ← full design system + schema docs
+├── style.css                ← shared design tokens + base styles
+├── recipe-engine.js         ← shared render engine
+├── recipes.js                ← metadata manifest, one entry per recipe
+├── recipe-template.html      ← blank shell for new recipes (data only)
+├── PROJECT_INSTRUCTIONS.md  ← full design system + schema docs
+├── images/                  ← recipe photos
 └── recipes/
-    └── [recipe-slug].html
+    └── [recipe-slug].html   ← HTML skeleton + INGREDIENTS/COOK_STEPS/DIRECTIONS/BASE_SERVES
 ```
 
 ## Recipe format
