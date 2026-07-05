@@ -1,17 +1,8 @@
 // recipes.js — Recipe manifest
 // Add one entry here each time you publish a new recipe.
+// image is optional — path relative to repo root; omit or leave "" if none.
 
 const RECIPES = [
-  {
-    slug:     "harissa-chicken-thighs",
-    title:    "Crispy Harissa Chicken Thighs",
-    tags:     ["chicken", "weeknight", "spicy"],
-    prepMins: 15,
-    cookMins: 35,
-    serves:   4,
-    skill:    "easy",
-    added:    "2025-01-01",
-  },
   {
     slug:     "king-ranch-chicken",
     title:    "King Ranch Chicken Casserole",
@@ -21,5 +12,6 @@ const RECIPES = [
     serves:   12,
     skill:    "medium",
     added:    "2025-07-05",
+    image:    "images/king-ranch-chicken.jpg",
   }
 ];
