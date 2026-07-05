@@ -1,15 +1,17 @@
 # Recipe App — Project Instructions
 
 ## What This Is
-A personal recipe app hosted as static HTML on GitHub Pages. No backend, no build step, no dependencies. Every recipe is a self-contained HTML file. The landing page reads a JS manifest to render and sort the recipe index.
+A personal recipe app hosted as static HTML on GitHub Pages. No backend, no build step, no dependencies. Each recipe is a thin HTML file — markup plus its own `INGREDIENTS`/`COOK_STEPS`/`DIRECTIONS`/`BASE_SERVES` data — with all shared styling and behavior pulled in from `style.css` and `recipe-engine.js`. The landing page reads a JS manifest to render and sort the recipe index.
 
 ## Repo Structure
 ```
 /
 ├── index.html            ← recipe listing / landing page
 ├── style.css             ← shared design tokens and base styles
+├── recipe-engine.js      ← shared render engine (scaling, tabs, mise, cook mode, wake lock)
 ├── recipes.js            ← metadata manifest (one entry per recipe)
-├── recipe-template.html  ← blank shell for new recipes
+├── recipe-template.html  ← blank shell for new recipes (data only)
+├── images/               ← recipe photos
 └── recipes/
     └── [recipe-slug].html
 ```
@@ -18,7 +20,8 @@ A personal recipe app hosted as static HTML on GitHub Pages. No backend, no buil
 - Repo is public, deployed from main branch root
 - Landing page: `benjaminneely.github.io/[repo-name]/`
 - Recipe pages: `benjaminneely.github.io/[repo-name]/recipes/[slug].html`
-- `style.css` is referenced from recipe pages as `../style.css`
+- `style.css` and `recipe-engine.js` are referenced from recipe pages as `../style.css` and `../recipe-engine.js`
+- Script order matters: each recipe's inline `<script>` (defining `INGREDIENTS` etc.) must come *before* `<script src="../recipe-engine.js">`, since the engine reads those globals and does its initial render at load time
 
 ---
 
@@ -154,9 +157,9 @@ The `frac` field supports partial ingredient use in a step (e.g. `frac: 0.5` if 
 
 ## Screen Wake Lock (required on every recipe page)
 
-This app's primary use case is mobile, hands-on, at the counter. The phone should not fall asleep mid-recipe. Every recipe page (and the template) requests a Screen Wake Lock on load via `navigator.wakeLock`, releases automatically when the tab is backgrounded, and re-acquires it when the tab becomes visible again. Fails silently on unsupported browsers or when denied (e.g. battery saver mode) — no fallback UI, no error shown to the user.
+This app's primary use case is mobile, hands-on, at the counter. The phone should not fall asleep mid-recipe. `recipe-engine.js` requests a Screen Wake Lock on load via `navigator.wakeLock`, releases automatically when the tab is backgrounded, and re-acquires it when the tab becomes visible again. Fails silently on unsupported browsers or when denied (e.g. battery saver mode) — no fallback UI, no error shown to the user.
 
-This lives at the bottom of each recipe's inline `<script>` block, after the initial render calls. When copying `recipe-template.html` for a new recipe, this block comes along automatically — don't remove it.
+This lives in the shared engine now, not per-recipe — no action needed when adding a new recipe.
 
 ---
 
@@ -214,8 +217,10 @@ When bringing in a new recipe:
 | File | Purpose |
 |------|---------|
 | `PROJECT_INSTRUCTIONS.md` | This document — paste into Project instructions |
-| `recipe-template.html` | Blank recipe shell to copy for each new recipe |
+| `style.css` | Shared design tokens + base styles, used by every recipe page and the template |
+| `recipe-engine.js` | Shared render engine — scaling, tabs, mise, cook mode, wake lock. Edit here, not per-recipe |
+| `recipe-template.html` | Blank recipe shell to copy for each new recipe — markup + data only |
 | `recipes.js` | Manifest with king ranch chicken entry |
 | `recipes/king-ranch-chicken.html` | First recipe, fully built, use as design reference |
 
-The recipe template and king ranch chicken HTML are the canonical reference implementations. When in doubt about structure or style, look at the king ranch chicken file.
+The recipe template and king ranch chicken HTML are the canonical reference implementations. When in doubt about structure or style, look at the king ranch chicken file. Any change to shared rendering behavior belongs in `recipe-engine.js`, not in an individual recipe file.
