@@ -1,7 +1,7 @@
 # Recipes — Notes & Backlog
 
 ## Current recipes (live in /recipes/)
-- **harissa-chicken-thighs.html** — Crispy Harissa Chicken Thighs. Weeknight, chicken, spicy. 15 min prep / 35 min cook / serves 4 / easy. Reference implementation; first recipe built.
+- **king-ranch-chicken.html** — King Ranch Chicken Casserole. Tex-Mex, chicken, casserole, crowd. 30 min prep / 1 hr cook / serves 12 / medium. Reference implementation; harissa chicken thighs retired in favor of this one.
 
 ## Recipe backlog
 *(Recipes to add — drop a source here when ready to build)*
@@ -60,7 +60,7 @@
 
 ## Open questions / future work
 - **style.css** — shared stylesheet not yet extracted. Currently each recipe is self-contained with inline styles. Extract once 2–3 recipes exist and the design is stable.
-- **index.html** — landing page not yet built. Will read `recipes.js` manifest and render recipe cards. Sorting by tag, cook time, date added. Build in first project session after repo is set up.
+- ~~**index.html** — landing page not yet built.~~ Built — reads `recipes.js`, renders cards, sortable by tag/cook time/date added.
 - **Print styles** — currently hides tabs and scale row; shows all three panels. Should probably only print Recipe tab. Revisit when someone actually uses it.
 - **`scalable: false` field** — schema placeholder only, no UI logic yet.
 
