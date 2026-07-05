@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>King Ranch Chicken Casserole</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400;1,700&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --cream: #f7f3ec; --ink: #1a1208; --rust: #c4440a; --rust-light: #e8623a;
+    --warm-gray: #8a7f72; --border: #ddd5c4; --white: #fffdf8; --step-bg: #161009;
+  }
+  html, body { background: var(--cream); font-family: "DM Sans", sans-serif; color: var(--ink); overflow-x: hidden; }
+  .tabs { position: sticky; top: 0; z-index: 100; background: var(--white); border-bottom: 1px solid var(--border); display: flex; }
+  .tab { flex: 1; padding: 12px 8px; text-align: center; font-family: "DM Mono", monospace; font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--warm-gray); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: all 0.2s; background: none; border-top: none; border-left: none; border-right: none; user-select: none; }
+  .tab.active { color: var(--ink); border-bottom-color: var(--ink); }
+  .recipe-title-block { padding: 24px 22px 20px; border-bottom: 1px solid var(--border); background: var(--white); }
+  .recipe-tag { font-family: "DM Mono", monospace; font-size: 9.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--rust); margin-bottom: 8px; display: block; }
+  .recipe-main-title { font-family: "Playfair Display", serif; font-weight: 900; font-size: clamp(26px, 7.5vw, 38px); line-height: 1.08; color: var(--ink); letter-spacing: -0.4px; margin-bottom: 16px; }
+  .recipe-meta-row { display: flex; gap: 18px; align-items: baseline; margin-bottom: 16px; flex-wrap: wrap; }
+  .meta-item { display: flex; align-items: baseline; gap: 5px; }
+  .meta-label { font-family: "DM Mono", monospace; font-size: 8.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--warm-gray); }
+  .meta-value { font-size: 13px; font-weight: 500; color: var(--ink); }
+  .scale-row { display: flex; align-items: center; gap: 10px; padding-top: 14px; border-top: 1px solid var(--border); }
+  .scale-label { font-family: "DM Mono", monospace; font-size: 9.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--warm-gray); }
+  .scale-pills { display: flex; gap: 6px; }
+  .scale-pill { padding: 5px 11px; border: 1px solid var(--border); border-radius: 14px; background: transparent; font-family: "DM Mono", monospace; font-size: 12px; font-weight: 500; color: var(--warm-gray); cursor: pointer; transition: all 0.15s; }
+  .scale-pill.active { border-color: var(--rust); background: var(--rust); color: white; }
+  .panel { display: none; } .panel.active { display: block; }
+  .recipe-panel { padding: 24px 22px 56px; max-width: 640px; margin: 0 auto; }
+  .intro-text { font-size: 15.5px; line-height: 1.72; color: #3a3028; margin-bottom: 32px; font-style: italic; padding-bottom: 28px; border-bottom: 1px solid var(--border); }
+  .section-head { font-family: "DM Mono", monospace; font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--warm-gray); margin-bottom: 16px; }
+  .ingredients-list { list-style: none; margin-bottom: 36px; }
+  .ing-group-title { font-family: "Playfair Display", serif; font-style: italic; font-size: 16px; color: var(--ink); margin: 24px 0 8px; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
+  .ing-item { display: grid; grid-template-columns: 80px 1fr; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 14.5px; line-height: 1.45; }
+  .ing-qty { font-family: "DM Mono", monospace; font-size: 12.5px; font-weight: 500; color: var(--rust); text-align: right; padding-top: 1px; }
+  .directions-list { list-style: none; counter-reset: step; }
+  .dir-item { counter-increment: step; display: grid; grid-template-columns: 20px 1fr; gap: 16px; padding: 18px 0; border-bottom: 1px solid var(--border); font-size: 15px; line-height: 1.7; color: #2a200f; }
+  .dir-item::before { content: counter(step); font-family: "DM Mono", monospace; font-size: 11px; font-weight: 500; color: var(--rust); padding-top: 4px; }
+  .ing-inline { font-weight: 500; color: var(--rust); }
+  .print-btn { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; margin-top: 32px; padding: 14px; border: 1px solid var(--border); border-radius: 2px; background: transparent; font-family: "DM Mono", monospace; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--warm-gray); cursor: pointer; transition: all 0.2s; }
+  .print-btn:hover { border-color: var(--ink); color: var(--ink); }
+  .mise-panel { padding: 24px 22px 56px; max-width: 640px; margin: 0 auto; }
+  .mise-progress-wrap { margin-bottom: 24px; }
+  .mise-progress-label { display: flex; justify-content: space-between; font-family: "DM Mono", monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--warm-gray); margin-bottom: 8px; }
+  .mise-bar { height: 2px; background: var(--border); border-radius: 2px; overflow: hidden; }
+  .mise-bar-fill { height: 100%; background: var(--rust); border-radius: 2px; transition: width 0.3s ease; width: 0%; }
+  .mise-reset { background: none; border: 1px solid var(--border); border-radius: 2px; font-family: "DM Mono", monospace; font-size: 9.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--warm-gray); padding: 4px 10px; cursor: pointer; transition: all 0.15s; }
+  .mise-reset:hover { border-color: var(--rust); color: var(--rust); }
+  .mise-intro { font-size: 13.5px; line-height: 1.65; color: var(--warm-gray); margin-bottom: 20px; font-style: italic; }
+  .mise-list { list-style: none; }
+  .mise-item { display: flex; align-items: center; gap: 14px; padding: 13px 0; border-bottom: 1px solid var(--border); cursor: pointer; transition: opacity 0.25s; }
+  .mise-item.checked { opacity: 0.38; }
+  .mise-check { width: 20px; height: 20px; border-radius: 50%; border: 1.5px solid var(--border); flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+  .mise-item.checked .mise-check { background: var(--rust); border-color: var(--rust); }
+  .mise-check-icon { display: none; color: white; font-size: 11px; }
+  .mise-item.checked .mise-check-icon { display: block; }
+  .mise-text { flex: 1; font-size: 15px; line-height: 1.4; }
+  .mise-qty { font-family: "DM Mono", monospace; font-size: 12px; color: var(--rust); }
+  .mise-item.checked .mise-text { text-decoration: line-through; }
+  .cook-panel { background: var(--step-bg); min-height: calc(100svh - 45px); display: flex; flex-direction: column; }
+  .cook-progress-bar { height: 2px; background: rgba(255,255,255,0.08); }
+  .cook-progress-fill { height: 100%; background: var(--rust-light); transition: width 0.4s ease; }
+  .cook-steps-container { flex: 1; position: relative; overflow: hidden; touch-action: pan-y; }
+  .cook-steps-track { display: flex; transition: transform 0.32s cubic-bezier(0.25,0.46,0.45,0.94); }
+  .cook-step { min-width: 100%; padding: 32px 28px 28px; user-select: none; }
+  .cook-step-label { font-family: "DM Mono", monospace; font-size: 14px; letter-spacing: 0.08em; color: var(--rust-light); margin-bottom: 18px; font-weight: 500; }
+  .cook-step-text { font-family: "Playfair Display", serif; font-size: clamp(19px, 5vw, 26px); line-height: 1.65; color: #f0ebe0; font-weight: 400; font-style: italic; }
+  .cook-step-text .ing-inline { color: var(--rust-light); font-style: normal; font-weight: 700; font-family: "DM Sans", sans-serif; font-size: 0.88em; }
+  .cook-step-text strong { font-style: normal; color: white; font-family: "DM Sans", sans-serif; font-size: 0.9em; }
+  .cook-nav { display: flex; align-items: center; justify-content: space-between; padding: 16px 24px 28px; border-top: 1px solid rgba(255,255,255,0.07); background: var(--step-bg); position: sticky; bottom: 0; }
+  .cook-nav-btn { width: 44px; height: 44px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.18); background: transparent; color: rgba(255,255,255,0.6); font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.18s; }
+  .cook-nav-btn:hover:not(:disabled) { border-color: var(--rust-light); color: var(--rust-light); }
+  .cook-nav-btn:disabled { opacity: 0.18; cursor: default; }
+  .cook-step-counter { font-family: "DM Mono", monospace; font-size: 11px; letter-spacing: 0.1em; color: rgba(255,255,255,0.3); }
+  .cook-step-counter em { color: var(--rust-light); font-style: normal; }
+  .swipe-hint { position: absolute; bottom: 80px; left: 0; right: 0; text-align: center; font-family: "DM Mono", monospace; font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255,255,255,0.15); pointer-events: none; animation: fadeOut 4s ease forwards 1s; }
+  @keyframes fadeOut { 0%,70% { opacity: 1; } 100% { opacity: 0; } }
+  @media print { .tabs, .recipe-title-block .scale-row, .print-btn { display: none !important; } .panel { display: block !important; } .cook-panel { background: white !important; } .cook-step-text { color: black !important; font-style: normal; } .cook-steps-track { flex-direction: column; transform: none !important; } }
+</style>
+</head>
+<body>
+
+<div class="tabs">
+  <button class="tab active" onclick="showTab('recipe')">Recipe</button>
+  <button class="tab" onclick="showTab('mise')">Mise en Place</button>
+  <button class="tab" onclick="showTab('cook')">Cook</button>
+</div>
+
+<div class="panel active" id="panel-recipe">
+  <div class="recipe-title-block">
+    <span class="recipe-tag">Tex-Mex · Casserole · Crowd</span>
+    <h1 class="recipe-main-title">King Ranch Chicken Casserole</h1>
+    <div class="recipe-meta-row">
+      <div class="meta-item"><span class="meta-label">Prep</span><span class="meta-value">30 min</span></div>
+      <div class="meta-item"><span class="meta-label">Cook</span><span class="meta-value">1 hr</span></div>
+      <div class="meta-item"><span class="meta-label">Total</span><span class="meta-value">1 hr 30 min</span></div>
+      <div class="meta-item"><span class="meta-label">Serves</span><span class="meta-value"><span id="serves-display">12</span></span></div>
+      <div class="meta-item"><span class="meta-label">Skill</span><span class="meta-value">Medium</span></div>
+    </div>
+    <div class="scale-row">
+      <span class="scale-label">Scale</span>
+      <div class="scale-pills">
+        <button class="scale-pill" data-scale="0.5" onclick="setScale(0.5)">½×</button>
+        <button class="scale-pill active" data-scale="1" onclick="setScale(1)">1×</button>
+        <button class="scale-pill" data-scale="2" onclick="setScale(2)">2×</button>
+      </div>
+    </div>
+  </div>
+  <div class="recipe-panel">
+    <p class="intro-text">The king of Texas casseroles, done right. This is Lisa Fain's slightly fancy-pants version — poblano alongside the bell pepper, real ancho chile powder, and a from-scratch cream sauce instead of canned soup. It still comes together in one baking dish and feeds a crowd without apology.</p>
+    <div class="section-head">Ingredients</div>
+    <ul class="ingredients-list" id="recipe-ing-list"></ul>
+    <div class="section-head">Directions</div>
+    <ol class="directions-list" id="recipe-dir-list"></ol>
+    <button class="print-btn" onclick="window.print()">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+      Print Recipe
+    </button>
+  </div>
+</div>
+
+<div class="panel" id="panel-mise">
+  <div class="mise-panel">
+    <div class="mise-progress-wrap">
+      <div class="mise-progress-label">
+        <span>Prep Progress</span>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span id="mise-count">0 / 17</span>
+          <button class="mise-reset" onclick="resetMise()">Reset</button>
+        </div>
+      </div>
+      <div class="mise-bar"><div class="mise-bar-fill" id="mise-bar-fill"></div></div>
+    </div>
+    <p class="mise-intro">Check off each ingredient as you measure and prep. Get everything ready before the pan goes on heat.</p>
+    <ul class="mise-list" id="mise-list"></ul>
+  </div>
+</div>
+
+<div class="panel" id="panel-cook">
+  <div class="cook-panel">
+    <div class="cook-progress-bar"><div class="cook-progress-fill" id="cook-progress-fill"></div></div>
+    <div class="cook-steps-container" id="cook-container">
+      <div class="cook-steps-track" id="cook-track"></div>
+      <div class="swipe-hint">← swipe →</div>
+    </div>
+    <div class="cook-nav">
+      <button class="cook-nav-btn" id="cook-prev" onclick="cookNav(-1)" disabled>←</button>
+      <div class="cook-step-counter"><em id="cook-cur">1</em> / <span id="cook-total">8</span></div>
+      <button class="cook-nav-btn" id="cook-next" onclick="cookNav(1)">→</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const INGREDIENTS = [
+  { group:"Chicken",  qty:1.5,  unit:"lb",   name:"boneless, skinless chicken (breasts, thighs, or mix)" },
+  { group:"Chicken",  qty:4,    unit:"tsp",   name:"freshly squeezed lime juice, divided" },
+  { group:"Chicken",  qty:4,    unit:"tsp",   name:"ancho chile powder, divided" },
+  { group:"Chicken",  qty:1,    unit:"tsp",   name:"kosher salt, plus more to taste" },
+  { group:"Chicken",  qty:0.5,  unit:"tsp",   name:"black pepper, plus more to taste" },
+  { group:"Chicken",  qty:2,    unit:"tbsp",  name:"olive oil" },
+  { group:"Sauce",    qty:4,    unit:"tbsp",  name:"unsalted butter" },
+  { group:"Sauce",    qty:0.5,  unit:"",      name:"medium yellow onion, diced" },
+  { group:"Sauce",    qty:1,    unit:"",      name:"red bell pepper, seeded and diced" },
+  { group:"Sauce",    qty:1,    unit:"",      name:"poblano pepper, seeded, stemmed, and diced" },
+  { group:"Sauce",    qty:3,    unit:"cloves",name:"garlic, minced" },
+  { group:"Sauce",    qty:2,    unit:"tbsp",  name:"all-purpose flour" },
+  { group:"Sauce",    qty:1,    unit:"tsp",   name:"ground cumin" },
+  { group:"Sauce",    qty:0.5,  unit:"tsp",   name:"cayenne pepper" },
+  { group:"Sauce",    qty:1,    unit:"cup",   name:"chicken broth" },
+  { group:"Sauce",    qty:10,   unit:"oz",    name:"Ro-Tel tomatoes, drained" },
+  { group:"Sauce",    qty:0.5,  unit:"cup",   name:"half and half" },
+  { group:"Sauce",    qty:0.333,unit:"cup",   name:"sour cream, plus more for serving" },
+  { group:"Sauce",    qty:0.25, unit:"cup",   name:"cilantro, chopped, plus more for serving" },
+  { group:"Assembly", qty:2,    unit:"tbsp",  name:"vegetable oil" },
+  { group:"Assembly", qty:10,   unit:"",      name:"corn tortillas" },
+  { group:"Assembly", qty:1.5,  unit:"cup",   name:"pepper Jack, shredded" },
+  { group:"Assembly", qty:1.5,  unit:"cup",   name:"cheddar, shredded" },
+];
+
+const COOK_STEPS = [
+  [
+    {t:"t",v:"Season "},
+    {t:"i",i:0,frac:1},
+    {t:"t",v:" with "},
+    {t:"i",i:1,frac:0.5},
+    {t:"t",v:", "},
+    {t:"i",i:2,frac:0.5},
+    {t:"t",v:", and a generous dash of salt and pepper. Heat "},
+    {t:"i",i:5,frac:1},
+    {t:"t",v:" in a skillet over medium. Cook chicken about "},
+    {t:"s",v:"10 minutes per side"},
+    {t:"t",v:" until cooked through, then shred with two forks. You should have about 3 cups."},
+  ],[
+    {t:"t",v:"Melt "},
+    {t:"i",i:6,frac:1},
+    {t:"t",v:" in a saucepan over medium-low. Add "},
+    {t:"i",i:7,frac:1},
+    {t:"t",v:", "},
+    {t:"i",i:8,frac:1},
+    {t:"t",v:", and "},
+    {t:"i",i:9,frac:1},
+    {t:"t",v:". Cook "},
+    {t:"s",v:"10 minutes"},
+    {t:"t",v:" until soft and fragrant. Add "},
+    {t:"i",i:10,frac:1},
+    {t:"t",v:", cook 30 seconds. Stir in "},
+    {t:"i",i:11,frac:1},
+    {t:"t",v:", "},
+    {t:"i",i:12,frac:1},
+    {t:"t",v:", "},
+    {t:"i",i:13,frac:1},
+    {t:"t",v:", and remaining "},
+    {t:"i",i:2,frac:0.5},
+    {t:"t",v:". Cook 1 minute more."},
+  ],[
+    {t:"t",v:"Pour in "},
+    {t:"i",i:14,frac:1},
+    {t:"t",v:" and cook on low until thickened, a few minutes. Stir in "},
+    {t:"i",i:15,frac:1},
+    {t:"t",v:" and "},
+    {t:"i",i:16,frac:1},
+    {t:"t",v:". Cover and "},
+    {t:"s",v:"simmer 15 minutes"},
+    {t:"t",v:", stirring occasionally."},
+  ],[
+    {t:"t",v:"Uncover. Stir in "},
+    {t:"i",i:17,frac:1},
+    {t:"t",v:", remaining "},
+    {t:"i",i:1,frac:0.5},
+    {t:"t",v:", and half the "},
+    {t:"i",i:18,frac:0.5},
+    {t:"t",v:". Season with salt and pepper to taste. Turn off heat."},
+  ],[
+    {t:"t",v:"Preheat oven to "},
+    {t:"s",v:"350°F"},
+    {t:"t",v:". Have a 9×13 baking dish ready. Heat "},
+    {t:"i",i:19,frac:1},
+    {t:"t",v:" in a skillet over medium-high and warm "},
+    {t:"i",i:20,frac:1},
+    {t:"t",v:" one at a time, about "},
+    {t:"s",v:"30 seconds per side"},
+    {t:"t",v:" until softened. Add more oil as needed."},
+  ],[
+    {t:"t",v:"Ladle ½ cup sauce onto the bottom of the baking dish. Layer in half the tortillas — rip some into strips to fill gaps. Add half the shredded chicken, half the remaining sauce, the remaining "},
+    {t:"i",i:18,frac:0.5},
+    {t:"t",v:", and "},
+    {t:"i",i:21,frac:0.5},
+    {t:"t",v:" mixed with "},
+    {t:"i",i:22,frac:0.5},
+    {t:"t",v:"."},
+  ],[
+    {t:"t",v:"Repeat the layers: remaining tortillas, chicken, sauce. Top with the remaining "},
+    {t:"i",i:21,frac:0.5},
+    {t:"t",v:" and "},
+    {t:"i",i:22,frac:0.5},
+    {t:"t",v:"."},
+  ],[
+    {t:"t",v:"Bake "},
+    {t:"s",v:"uncovered 30 minutes"},
+    {t:"t",v:" until brown and bubbling. Serve with additional sour cream and cilantro."},
+  ],
+];
+
+const DIRECTIONS = [
+  `Season <span class="ing-inline">chicken</span> with half the <span class="ing-inline">lime juice</span>, half the <span class="ing-inline">ancho chile powder</span>, salt, and pepper. Cook in <span class="ing-inline">olive oil</span> over medium, about 10 minutes per side. Shred with two forks — should yield about 3 cups.`,
+  `Melt <span class="ing-inline">butter</span> over medium-low. Cook <span class="ing-inline">onion</span>, <span class="ing-inline">bell pepper</span>, and <span class="ing-inline">poblano</span> for 10 minutes until soft. Add <span class="ing-inline">garlic</span> for 30 seconds. Stir in <span class="ing-inline">flour</span>, <span class="ing-inline">cumin</span>, <span class="ing-inline">cayenne</span>, and remaining <span class="ing-inline">ancho chile powder</span>. Cook 1 minute.`,
+  `Add <span class="ing-inline">chicken broth</span> and cook on low until thickened. Stir in <span class="ing-inline">Ro-Tel</span> and <span class="ing-inline">half and half</span>. Cover and simmer 15 minutes, stirring occasionally.`,
+  `Uncover. Stir in <span class="ing-inline">sour cream</span>, remaining <span class="ing-inline">lime juice</span>, and half the <span class="ing-inline">cilantro</span>. Season with salt and pepper to taste. Turn off heat.`,
+  `Preheat oven to 350°F. Warm <span class="ing-inline">corn tortillas</span> one at a time in <span class="ing-inline">vegetable oil</span> over medium-high, about 30 seconds per side.`,
+  `Ladle ½ cup sauce into a 9×13 baking dish. Layer half the tortillas, half the chicken, half the remaining sauce, the remaining cilantro, and 1½ cups mixed cheese.`,
+  `Repeat: remaining tortillas, chicken, sauce. Top with remaining cheese.`,
+  `Bake uncovered 30 minutes until brown and bubbling. Serve with sour cream and cilantro.`,
+];
+
+const BASE_SERVES = 12;
+
+const FRACS = [[0.125,"⅛"],[0.25,"¼"],[0.333,"⅓"],[0.5,"½"],[0.667,"⅔"],[0.75,"¾"]];
+function toFrac(v) {
+  if (v <= 0) return "—";
+  if (v === Math.floor(v)) return String(v);
+  const whole = Math.floor(v), frac = +(v - whole).toFixed(3);
+  for (const [f, sym] of FRACS) if (Math.abs(frac - f) < 0.04) return (whole > 0 ? whole : "") + sym;
+  return Math.round(v * 10) / 10;
+}
+function isClean(v) {
+  if (v === Math.floor(v)) return true;
+  const frac = +(v - Math.floor(v)).toFixed(3);
+  return FRACS.some(([f]) => Math.abs(frac - f) < 0.04);
+}
+function fmtQtyUnit(baseQty, baseUnit, sc) {
+  let v = baseQty * sc, unit = baseUnit;
+  if (unit === "tsp") { const t = v / 3; if (v >= 3 && isClean(t)) { v = t; unit = "tbsp"; } }
+  if (unit === "tbsp") { const t = v / 16; if (v >= 4 && isClean(t)) { v = t; unit = "cup"; } }
+  return { qty: toFrac(v), unit };
+}
+function ingSpan(i, frac) {
+  const ing = INGREDIENTS[i];
+  const { qty, unit } = fmtQtyUnit(ing.qty * (frac ?? 1), ing.unit, scale);
+  const unitStr = unit ? ` ${unit}` : "";
+  return `<span class="ing-inline">${qty}${unitStr} ${ing.name}</span>`;
+}
+
+let scale = 1, currentStep = 0, miseChecked = new Set();
+
+function renderRecipeIng() {
+  let html = "", lastGroup = "";
+  INGREDIENTS.forEach(ing => {
+    if (ing.group && ing.group !== lastGroup) { html += `<li class="ing-group-title">${ing.group}</li>`; lastGroup = ing.group; }
+    const { qty, unit } = fmtQtyUnit(ing.qty, ing.unit, scale);
+    const unitStr = unit ? ` ${unit}` : "";
+    html += `<li class="ing-item"><span class="ing-qty">${qty}${unitStr}</span><span>${ing.name}</span></li>`;
+  });
+  document.getElementById("recipe-ing-list").innerHTML = html;
+}
+function renderDirections() {
+  document.getElementById("recipe-dir-list").innerHTML = DIRECTIONS.map(d => `<li class="dir-item"><div>${d}</div></li>`).join("");
+}
+function renderMise() {
+  document.getElementById("mise-list").innerHTML = INGREDIENTS.map((ing, i) => {
+    const { qty, unit } = fmtQtyUnit(ing.qty, ing.unit, scale);
+    const unitStr = unit ? ` ${unit}` : "";
+    const chk = miseChecked.has(i);
+    return `<li class="mise-item${chk ? " checked" : ""}" onclick="toggleMise(${i})">
+      <div class="mise-check"><span class="mise-check-icon">✓</span></div>
+      <div class="mise-text"><span class="mise-qty">${qty}${unitStr}</span> ${ing.name}</div>
+    </li>`;
+  }).join("");
+  const done = miseChecked.size, total = INGREDIENTS.length;
+  document.getElementById("mise-count").textContent = `${done} / ${total}`;
+  document.getElementById("mise-bar-fill").style.width = `${(done/total)*100}%`;
+}
+function toggleMise(i) { miseChecked.has(i) ? miseChecked.delete(i) : miseChecked.add(i); renderMise(); }
+function resetMise() { miseChecked.clear(); renderMise(); }
+function buildStepHtml(segs) {
+  return segs.map(s => s.t === "t" ? s.v : s.t === "s" ? `<strong>${s.v}</strong>` : s.t === "i" ? ingSpan(s.i, s.frac) : "").join("");
+}
+function renderCookSteps() {
+  const n = COOK_STEPS.length;
+  document.getElementById("cook-track").innerHTML = COOK_STEPS.map((segs, i) =>
+    `<div class="cook-step"><div class="cook-step-label">Step ${i+1} of ${n}</div><div class="cook-step-text">${buildStepHtml(segs)}</div></div>`
+  ).join("");
+  document.getElementById("cook-total").textContent = n;
+  updateCookUI();
+}
+function cookNav(dir) { currentStep = Math.max(0, Math.min(COOK_STEPS.length-1, currentStep+dir)); updateCookUI(); }
+function updateCookUI() {
+  document.getElementById("cook-track").style.transform = `translateX(${-currentStep*100}%)`;
+  document.getElementById("cook-cur").textContent = currentStep+1;
+  document.getElementById("cook-progress-fill").style.width = `${((currentStep+1)/COOK_STEPS.length)*100}%`;
+  document.getElementById("cook-prev").disabled = currentStep === 0;
+  document.getElementById("cook-next").disabled = currentStep === COOK_STEPS.length-1;
+}
+let touchStartX = 0;
+document.getElementById("cook-container").addEventListener("touchstart", e => { touchStartX = e.touches[0].clientX; }, { passive:true });
+document.getElementById("cook-container").addEventListener("touchend", e => { const dx = e.changedTouches[0].clientX - touchStartX; if (Math.abs(dx) > 40) cookNav(dx < 0 ? 1 : -1); }, { passive:true });
+function setScale(s) {
+  scale = s;
+  document.querySelectorAll(".scale-pill").forEach(p => p.classList.toggle("active", parseFloat(p.dataset.scale) === s));
+  document.getElementById("serves-display").textContent = Math.round(BASE_SERVES * s);
+  renderRecipeIng(); renderMise(); renderCookSteps();
+}
+function showTab(name) {
+  const names = ["recipe","mise","cook"];
+  document.querySelectorAll(".tab").forEach((t,i) => t.classList.toggle("active", names[i] === name));
+  document.querySelectorAll(".panel").forEach(p => p.classList.remove("active"));
+  document.getElementById("panel-"+name).classList.add("active");
+}
+renderRecipeIng(); renderDirections(); renderMise(); renderCookSteps();
+</script>
+</body>
+</html>
