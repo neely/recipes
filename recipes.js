@@ -1,6 +1,5 @@
 // recipes.js — Recipe manifest
 // Add one entry here each time you publish a new recipe.
-// This file is loaded by index.html to build the recipe listing.
 
 const RECIPES = [
   {
@@ -12,5 +11,15 @@ const RECIPES = [
     serves:   4,
     skill:    "easy",
     added:    "2025-01-01",
+  },
+  {
+    slug:     "king-ranch-chicken",
+    title:    "King Ranch Chicken Casserole",
+    tags:     ["chicken", "tex-mex", "casserole", "crowd"],
+    prepMins: 30,
+    cookMins: 60,
+    serves:   12,
+    skill:    "medium",
+    added:    "2025-07-05",
   }
 ];
