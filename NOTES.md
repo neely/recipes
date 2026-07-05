@@ -69,12 +69,11 @@
 - Core mobile requirement — phone must not sleep mid-recipe
 - Requested on load via `navigator.wakeLock`, releases when tab hidden, re-acquires on visibility change
 - Silent no-op if unsupported/denied, no fallback UI
-- Lives in every recipe's inline script (including the template) — not yet extracted to shared JS
+- Lives in `recipe-engine.js` — shared, not per-recipe (see Phase 4 below)
 
 ## Open questions / future work
-- **style.css** — shared stylesheet not yet extracted. Currently each recipe is self-contained with inline styles. Extract once 2–3 recipes exist and the design is stable.
 - **Print styles** — currently hides tabs and scale row; shows all three panels. Should probably only print Recipe tab. Revisit when someone actually uses it.
-- **Shared JS engine** — the render engine (`fmtQtyUnit`, `renderQty`, `ingSpan`, wake lock, etc.) is duplicated in full inside every recipe file, same as the CSS. Any future engine bugfix or feature has to be hand-applied to each recipe file until this is extracted alongside (or instead of) `style.css`. Worth deciding whether Phase 4 covers just CSS or CSS + JS.
+- **Recipe photo on the recipe page itself** — `image` field currently only renders on the index card, not on the recipe page. Not planned, just noted.
 
 ## Working conventions
 - README stays in sync with what's actually live
