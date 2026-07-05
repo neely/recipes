@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>RECIPE TITLE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400;1,700&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+<!-- STICKY TABS -->
+<div class="tabs">
+  <button class="tab active" onclick="showTab('recipe')">Recipe</button>
+  <button class="tab" onclick="showTab('mise')">Mise en Place</button>
+  <button class="tab" onclick="showTab('cook')">Cook</button>
+</div>
+
+<!-- ══ RECIPE PANEL ══ -->
+<div class="panel active" id="panel-recipe">
+  <div class="recipe-title-block">
+    <span class="recipe-tag">TAG · TAG · TAG</span>
+    <h1 class="recipe-main-title">Recipe Title</h1>
+    <div class="recipe-meta-row">
+      <div class="meta-item">
+        <span class="meta-label">Prep</span>
+        <span class="meta-value">__ min</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Cook</span>
+        <span class="meta-value">__ min</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Total</span>
+        <span class="meta-value">__ min</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Serves</span>
+        <span class="meta-value"><span id="serves-display">4</span></span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Skill</span>
+        <span class="meta-value">Easy</span>
+      </div>
+    </div>
+    <div class="scale-row">
+      <span class="scale-label">Scale</span>
+      <div class="scale-pills">
+        <button class="scale-pill" data-scale="0.5" onclick="setScale(0.5)">½×</button>
+        <button class="scale-pill active" data-scale="1" onclick="setScale(1)">1×</button>
+        <button class="scale-pill" data-scale="2" onclick="setScale(2)">2×</button>
+        <button class="scale-pill" data-scale="3" onclick="setScale(3)">3×</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="recipe-panel">
+    <p class="intro-text">INTRO PARAGRAPH — editorial voice, 2–3 sentences on why this recipe works.</p>
+    <div class="section-head">Ingredients</div>
+    <ul class="ingredients-list" id="recipe-ing-list"></ul>
+    <div class="section-head">Directions</div>
+    <ol class="directions-list" id="recipe-dir-list"></ol>
+    <button class="print-btn" onclick="window.print()">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+      Print Recipe
+    </button>
+  </div>
+</div>
+
+<!-- ══ MISE EN PLACE PANEL ══ -->
+<div class="panel" id="panel-mise">
+  <div class="mise-panel">
+    <div class="mise-progress-wrap">
+      <div class="mise-progress-label">
+        <span>Prep Progress</span>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span id="mise-count">0 / 0</span>
+          <button class="mise-reset" onclick="resetMise()">Reset</button>
+        </div>
+      </div>
+      <div class="mise-bar"><div class="mise-bar-fill" id="mise-bar-fill"></div></div>
+    </div>
+    <p class="mise-intro">Check off each ingredient as you measure and prep. Get everything ready before the pan goes on heat.</p>
+    <ul class="mise-list" id="mise-list"></ul>
+  </div>
+</div>
+
+<!-- ══ COOK PANEL ══ -->
+<div class="panel" id="panel-cook">
+  <div class="cook-panel">
+    <div class="cook-progress-bar">
+      <div class="cook-progress-fill" id="cook-progress-fill"></div>
+    </div>
+    <div class="cook-steps-container" id="cook-container">
+      <div class="cook-steps-track" id="cook-track"></div>
+      <div class="swipe-hint">← swipe →</div>
+    </div>
+    <div class="cook-nav">
+      <button class="cook-nav-btn" id="cook-prev" onclick="cookNav(-1)" disabled>←</button>
+      <div class="cook-step-counter"><em id="cook-cur">1</em> / <span id="cook-total">0</span></div>
+      <button class="cook-nav-btn" id="cook-next" onclick="cookNav(1)">→</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════
+// INGREDIENTS
+// Each: { group, qty, unit, name }
+// group: section heading — use "" if no groups
+// qty:   base (1×) amount, always a number
+// unit:  "tsp" | "tbsp" | "cup" | "oz" | "lb" | "cloves" | "handful" | "pinch" | "" (countable)
+// name:  lowercase, include prep notes e.g. "garlic, minced"
+// ═══════════════════════════════════════════════════════
+const INGREDIENTS = [
+  { group:"",  qty:1,   unit:"",     name:"INGREDIENT NAME" },
+  // add more...
+];
+
+// ═══════════════════════════════════════════════════════
+// COOK STEPS
+// Array of steps; each step is an array of segments:
+//   { t:"t", v:"plain text" }
+//   { t:"i", i:INGREDIENT_INDEX, frac:1 }   frac = fraction of qty used in this step
+//   { t:"s", v:"bold technique note" }
+// ═══════════════════════════════════════════════════════
+const COOK_STEPS = [
+  [
+    { t:"t", v:"STEP ONE TEXT with " },
+    { t:"i", i:0, frac:1 },
+    { t:"t", v:"." },
+  ],
+  // add more steps...
+];
+
+// ═══════════════════════════════════════════════════════
+// DIRECTIONS (Recipe tab — static HTML, name callouts only, no quantities)
+// ═══════════════════════════════════════════════════════
+const DIRECTIONS = [
+  `DIRECTION ONE with <span class="ing-inline">ingredient name</span> callouts.`,
+  // add more...
+];
+
+// ═══════════════════════════════════════════════════════
+// BASE SERVES — update to match recipe
+// ═══════════════════════════════════════════════════════
+const BASE_SERVES = 4;
+
+// ─────────────────────────────────────────────────────
+// BELOW THIS LINE: do not edit — shared recipe engine
+// ─────────────────────────────────────────────────────
+const FRACS = [[0.125,'⅛'],[0.25,'¼'],[0.333,'⅓'],[0.5,'½'],[0.667,'⅔'],[0.75,'¾']];
+
+function toFrac(v) {
+  if (v <= 0) return '—';
+  if (v === Math.floor(v)) return String(v);
+  const whole = Math.floor(v);
+  const frac = +(v - whole).toFixed(3);
+  for (const [f, sym] of FRACS) {
+    if (Math.abs(frac - f) < 0.04) return (whole > 0 ? whole : '') + sym;
+  }
+  return Math.round(v * 10) / 10;
+}
+
+function isClean(v) {
+  if (v === Math.floor(v)) return true;
+  const frac = +(v - Math.floor(v)).toFixed(3);
+  return FRACS.some(([f]) => Math.abs(frac - f) < 0.04);
+}
+
+function fmtQtyUnit(baseQty, baseUnit, sc) {
+  let v = baseQty * sc;
+  let unit = baseUnit;
+  if (unit === 'tsp') {
+    const asTbsp = v / 3;
+    if (v >= 3 && isClean(asTbsp)) { v = asTbsp; unit = 'tbsp'; }
+  }
+  if (unit === 'tbsp') {
+    const asCups = v / 16;
+    if (v >= 4 && isClean(asCups)) { v = asCups; unit = 'cup'; }
+  }
+  return { qty: toFrac(v), unit };
+}
+
+function ingSpan(i, frac) {
+  const ing = INGREDIENTS[i];
+  const { qty, unit } = fmtQtyUnit(ing.qty * (frac ?? 1), ing.unit, scale);
+  const unitStr = unit ? ` ${unit}` : '';
+  return `<span class="ing-inline">${qty}${unitStr} ${ing.name}</span>`;
+}
+
+let scale = 1;
+let currentStep = 0;
+let miseChecked = new Set();
+
+function renderRecipeIng() {
+  let html = '', lastGroup = '';
+  INGREDIENTS.forEach(ing => {
+    if (ing.group && ing.group !== lastGroup) {
+      html += `<li class="ing-group-title">${ing.group}</li>`;
+      lastGroup = ing.group;
+    }
+    const { qty, unit } = fmtQtyUnit(ing.qty, ing.unit, scale);
+    const unitStr = unit ? ` ${unit}` : '';
+    html += `<li class="ing-item"><span class="ing-qty">${qty}${unitStr}</span><span>${ing.name}</span></li>`;
+  });
+  document.getElementById('recipe-ing-list').innerHTML = html;
+}
+
+function renderDirections() {
+  document.getElementById('recipe-dir-list').innerHTML =
+    DIRECTIONS.map(d => `<li class="dir-item"><div>${d}</div></li>`).join('');
+}
+
+function renderMise() {
+  document.getElementById('mise-list').innerHTML = INGREDIENTS.map((ing, i) => {
+    const { qty, unit } = fmtQtyUnit(ing.qty, ing.unit, scale);
+    const unitStr = unit ? ` ${unit}` : '';
+    const chk = miseChecked.has(i);
+    return `<li class="mise-item${chk ? ' checked' : ''}" onclick="toggleMise(${i})">
+      <div class="mise-check"><span class="mise-check-icon">✓</span></div>
+      <div class="mise-text"><span class="mise-qty">${qty}${unitStr}</span> ${ing.name}</div>
+    </li>`;
+  }).join('');
+  const done = miseChecked.size, total = INGREDIENTS.length;
+  document.getElementById('mise-count').textContent = `${done} / ${total}`;
+  document.getElementById('mise-bar-fill').style.width = `${(done/total)*100}%`;
+}
+
+function toggleMise(i) {
+  miseChecked.has(i) ? miseChecked.delete(i) : miseChecked.add(i);
+  renderMise();
+}
+
+function resetMise() {
+  miseChecked.clear();
+  renderMise();
+}
+
+function buildStepHtml(segments) {
+  return segments.map(seg => {
+    if (seg.t === 't') return seg.v;
+    if (seg.t === 's') return `<strong>${seg.v}</strong>`;
+    if (seg.t === 'i') return ingSpan(seg.i, seg.frac);
+    return '';
+  }).join('');
+}
+
+function renderCookSteps() {
+  const n = COOK_STEPS.length;
+  document.getElementById('cook-track').innerHTML = COOK_STEPS.map((segs, i) =>
+    `<div class="cook-step">
+      <div class="cook-step-label">Step ${i+1} of ${n}</div>
+      <div class="cook-step-text">${buildStepHtml(segs)}</div>
+    </div>`
+  ).join('');
+  document.getElementById('cook-total').textContent = n;
+  updateCookUI();
+}
+
+function cookNav(dir) {
+  currentStep = Math.max(0, Math.min(COOK_STEPS.length - 1, currentStep + dir));
+  updateCookUI();
+}
+
+function updateCookUI() {
+  document.getElementById('cook-track').style.transform = `translateX(${-currentStep * 100}%)`;
+  document.getElementById('cook-cur').textContent = currentStep + 1;
+  document.getElementById('cook-progress-fill').style.width =
+    `${((currentStep+1) / COOK_STEPS.length) * 100}%`;
+  document.getElementById('cook-prev').disabled = currentStep === 0;
+  document.getElementById('cook-next').disabled = currentStep === COOK_STEPS.length - 1;
+}
+
+let touchStartX = 0;
+document.getElementById('cook-container').addEventListener('touchstart', e => {
+  touchStartX = e.touches[0].clientX;
+}, { passive: true });
+document.getElementById('cook-container').addEventListener('touchend', e => {
+  const dx = e.changedTouches[0].clientX - touchStartX;
+  if (Math.abs(dx) > 40) cookNav(dx < 0 ? 1 : -1);
+}, { passive: true });
+
+function setScale(s) {
+  scale = s;
+  document.querySelectorAll('.scale-pill').forEach(p =>
+    p.classList.toggle('active', parseFloat(p.dataset.scale) === s)
+  );
+  document.getElementById('serves-display').textContent = Math.round(BASE_SERVES * s);
+  renderRecipeIng();
+  renderMise();
+  renderCookSteps();
+}
+
+function showTab(name) {
+  const names = ['recipe','mise','cook'];
+  document.querySelectorAll('.tab').forEach((t, i) => t.classList.toggle('active', names[i] === name));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+}
+
+renderRecipeIng();
+renderDirections();
+renderMise();
+renderCookSteps();
+</script>
+</body>
+</html>
