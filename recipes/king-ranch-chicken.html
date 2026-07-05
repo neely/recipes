@@ -299,9 +299,17 @@ function fmtQtyUnit(baseQty, baseUnit, sc) {
 }
 function ingSpan(i, frac) {
   const ing = INGREDIENTS[i];
+  if (ing.scalable === false) {
+    return `<span class="ing-inline">${ing.label} ${ing.name}</span>`;
+  }
   const { qty, unit } = fmtQtyUnit(ing.qty * (frac ?? 1), ing.unit, scale);
   const unitStr = unit ? ` ${unit}` : "";
   return `<span class="ing-inline">${qty}${unitStr} ${ing.name}</span>`;
+}
+function renderQty(ing) {
+  if (ing.scalable === false) return ing.label || "";
+  const { qty, unit } = fmtQtyUnit(ing.qty, ing.unit, scale);
+  return `${qty}${unit ? " " + unit : ""}`;
 }
 
 let scale = 1, currentStep = 0, miseChecked = new Set();
@@ -310,9 +318,7 @@ function renderRecipeIng() {
   let html = "", lastGroup = "";
   INGREDIENTS.forEach(ing => {
     if (ing.group && ing.group !== lastGroup) { html += `<li class="ing-group-title">${ing.group}</li>`; lastGroup = ing.group; }
-    const { qty, unit } = fmtQtyUnit(ing.qty, ing.unit, scale);
-    const unitStr = unit ? ` ${unit}` : "";
-    html += `<li class="ing-item"><span class="ing-qty">${qty}${unitStr}</span><span>${ing.name}</span></li>`;
+    html += `<li class="ing-item"><span class="ing-qty">${renderQty(ing)}</span><span>${ing.name}</span></li>`;
   });
   document.getElementById("recipe-ing-list").innerHTML = html;
 }
@@ -321,12 +327,10 @@ function renderDirections() {
 }
 function renderMise() {
   document.getElementById("mise-list").innerHTML = INGREDIENTS.map((ing, i) => {
-    const { qty, unit } = fmtQtyUnit(ing.qty, ing.unit, scale);
-    const unitStr = unit ? ` ${unit}` : "";
     const chk = miseChecked.has(i);
     return `<li class="mise-item${chk ? " checked" : ""}" onclick="toggleMise(${i})">
       <div class="mise-check"><span class="mise-check-icon">✓</span></div>
-      <div class="mise-text"><span class="mise-qty">${qty}${unitStr}</span> ${ing.name}</div>
+      <div class="mise-text"><span class="mise-qty">${renderQty(ing)}</span> ${ing.name}</div>
     </li>`;
   }).join("");
   const done = miseChecked.size, total = INGREDIENTS.length;
@@ -370,6 +374,20 @@ function showTab(name) {
   document.getElementById("panel-"+name).classList.add("active");
 }
 renderRecipeIng(); renderDirections(); renderMise(); renderCookSteps();
+
+// Screen Wake Lock — keep the phone awake while cooking. Reacquires on visibility change.
+let wakeLock = null;
+async function requestWakeLock() {
+  if (!("wakeLock" in navigator)) return;
+  try {
+    wakeLock = await navigator.wakeLock.request("screen");
+    wakeLock.addEventListener("release", () => { wakeLock = null; });
+  } catch (err) {}
+}
+document.addEventListener("visibilitychange", () => {
+  if (document.visibilityState === "visible") requestWakeLock();
+});
+requestWakeLock();
 </script>
 </body>
 </html>
