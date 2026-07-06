@@ -60,7 +60,7 @@ See [PLAN.md](PLAN.md).
 
 ## How this was built
 
-Built on a phone through Claude (Sonnet 4.6), following the same workflow as [The Dial](https://radio.benneely.com) — Claude read and wrote the repo directly via a fine-grained GitHub PAT, Cloudflare Pages pointed at the subdomain before the first commit, every push immediately testable at recipes.benneely.com.
+Built on a phone through Claude (Sonnet 4.6 low and 5 medium), following the same workflow as [The Dial](https://radio.benneely.com) — Claude read and wrote the repo directly via a fine-grained GitHub PAT, Cloudflare Pages pointed at the subdomain before the first commit, every push immediately testable at recipes.benneely.com.
 
 The recipe format was designed iteratively in conversation before any code was committed: three-tab layout, scale logic, unit escalation rules, cook step segment schema. The king ranch chicken casserole recipe is the canonical reference implementation.
 
