@@ -36,6 +36,7 @@ Live at **recipes.benneely.com** · Repo: github.com/neely/recipes
 - Implemented `scalable: false` + `label` field (per-ingredient, not per-recipe) — applied to renderQty() in both recipe-template.html and king-ranch-chicken.html
 - Formalized `image` field in recipes.js manifest — path convention, 4:3 aspect ratio, fallback card design
 - Added Screen Wake Lock to every recipe page — mobile-first requirement, phone shouldn't sleep mid-cook
+- Added optional `SOURCE` byline (plain text or URL, auto-shortened to domain) shown above the intro paragraph
 
 ## ✓ Phase 4 — style.css + shared engine extraction
 - Extracted shared design tokens and base styles into `style.css`, linked from every recipe page as `../style.css`
