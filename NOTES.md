@@ -60,6 +60,13 @@
 - King Ranch Chicken has none currently; harissa (retired) would have used this for "salt to taste"-type lines
 - Examples: "salt to taste", "oil for frying", "water as needed"
 
+### Favicon / Home Screen icon (locked)
+- Recipe notecard with a filing tab on top, rust background, cream card, ink border/tab, rust title bar + ruled lines
+- Full-bleed square (no pre-rounded corners) — iOS applies its own rounding on Add to Home Screen
+- Files: `apple-touch-icon.png` (180×180), `favicon.ico` (16/32/48), `favicon-32x32.png` fallback
+- Linked with an absolute path (`/apple-touch-icon.png` etc.) so it works identically from root and from `/recipes/`
+- Linked in every page's `<head>` — index, template, and each recipe file — since any page could be the one someone adds to their Home Screen
+
 ### Recipe source (locked)
 - Optional `SOURCE` constant per recipe — plain text ("Grandma Neely") or a URL, auto-detected
 - URLs render as a link shortened to just the domain; plain text renders as-is
