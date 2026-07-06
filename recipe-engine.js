@@ -7,6 +7,7 @@
 //   COOK_STEPS    — array of step segment arrays
 //   DIRECTIONS    — array of HTML strings
 //   BASE_SERVES   — number, servings at 1x scale
+//   SOURCE        — optional string: plain text ("Grandma Neely") or a URL
 //
 // This file then renders everything and wires up all interactivity.
 // Do not edit per-recipe — change here and it applies to every recipe.
@@ -81,6 +82,22 @@ function renderRecipeIng() {
 function renderDirections() {
   document.getElementById('recipe-dir-list').innerHTML =
     DIRECTIONS.map(d => `<li class="dir-item"><div>${d}</div></li>`).join('');
+}
+
+// SOURCE is optional. Either a plain string ("Grandma Neely") or a URL
+// ("https://..."), auto-detected. URLs display as a link, shortened to
+// just the domain (no www., no path).
+function renderSource() {
+  const el = document.getElementById('recipe-source');
+  if (!el) return;
+  if (typeof SOURCE === 'undefined' || !SOURCE) { el.style.display = 'none'; return; }
+  const isUrl = /^https?:\/\//i.test(SOURCE);
+  if (isUrl) {
+    const domain = SOURCE.replace(/^https?:\/\//i, '').replace(/^www\./i, '').split('/')[0];
+    el.innerHTML = `Source: <a href="${SOURCE}" target="_blank" rel="noopener">${domain}</a>`;
+  } else {
+    el.textContent = `Source: ${SOURCE}`;
+  }
 }
 
 function renderMise() {
@@ -170,6 +187,7 @@ function showTab(name) {
 
 renderRecipeIng();
 renderDirections();
+renderSource();
 renderMise();
 renderCookSteps();
 
