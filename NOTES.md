@@ -79,4 +79,5 @@
 - README stays in sync with what's actually live
 - NOTES is the research scratchpad — add decisions here when made
 - PLAN tracks phases; check off as done
-- Recipe slugs match the filename: `harissa-chicken-thighs` → `recipes/harissa-chicken-thighs.html` + entry in `recipes.js`
+- Recipe slugs match the filename: `king-ranch-chicken` → `recipes/king-ranch-chicken.html` + entry in `recipes.js`
+- **Hosting is Cloudflare Pages only.** Native GitHub Pages was enabled by default early on, causing duplicate/redundant deploys and confusing build-status noise; it's been explicitly unpublished (2026-07-06). If Pages settings ever look "on" again, turn them back off — Cloudflare is the single source of truth for the live site.
