@@ -164,6 +164,20 @@ html, body {
   border-bottom: 1px solid var(--border);
 }
 
+.recipe-source {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  color: var(--warm-gray);
+  margin-bottom: 14px;
+}
+
+.recipe-source a {
+  color: var(--rust);
+  text-decoration: none;
+}
+.recipe-source a:hover { text-decoration: underline; }
+
 .section-head {
   font-family: 'DM Mono', monospace;
   font-size: 10px;
