@@ -1,7 +1,7 @@
 # Recipe App — Project Instructions
 
 ## What This Is
-A personal recipe app hosted as static HTML on GitHub Pages. No backend, no build step, no dependencies. Each recipe is a thin HTML file — markup plus its own `INGREDIENTS`/`COOK_STEPS`/`DIRECTIONS`/`BASE_SERVES` data — with all shared styling and behavior pulled in from `style.css` and `recipe-engine.js`. The landing page reads a JS manifest to render and sort the recipe index.
+A personal recipe app hosted as static HTML. No backend, no build step, no dependencies. Each recipe is a thin HTML file — markup plus its own `INGREDIENTS`/`COOK_STEPS`/`DIRECTIONS`/`BASE_SERVES` data — with all shared styling and behavior pulled in from `style.css` and `recipe-engine.js`. The landing page reads a JS manifest to render and sort the recipe index.
 
 ## Repo Structure
 ```
@@ -16,10 +16,11 @@ A personal recipe app hosted as static HTML on GitHub Pages. No backend, no buil
     └── [recipe-slug].html
 ```
 
-## GitHub Pages
-- Repo is public, deployed from main branch root
-- Landing page: `benjaminneely.github.io/[repo-name]/`
-- Recipe pages: `benjaminneely.github.io/[repo-name]/recipes/[slug].html`
+## Hosting
+- Repo is public on GitHub (`neely/recipes`), deployed via **Cloudflare Pages**, pointed at the `recipes.benneely.com` subdomain — not GitHub Pages, which has been explicitly disabled
+- Every push to main triggers an immediate Cloudflare Pages build; typically live within a minute or two
+- Landing page: `recipes.benneely.com`
+- Recipe pages: `recipes.benneely.com/recipes/[slug].html`
 - `style.css` and `recipe-engine.js` are referenced from recipe pages as `../style.css` and `../recipe-engine.js`
 - Script order matters: each recipe's inline `<script>` (defining `INGREDIENTS` etc.) must come *before* `<script src="../recipe-engine.js">`, since the engine reads those globals and does its initial render at load time
 
@@ -200,7 +201,7 @@ The `image` field is optional. Omit it (or leave `""`) for recipes without a pho
 3. Fill in `DIRECTIONS` (static HTML strings, name callouts only, no quantities)
 4. Update title block, meta row, intro paragraph
 5. Add one entry to `recipes.js`
-6. Commit and push — GitHub Pages deploys automatically
+6. Commit and push — Cloudflare Pages deploys automatically
 
 ### Ingestion Process (in Claude Project)
 When bringing in a new recipe:
