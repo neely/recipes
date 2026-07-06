@@ -10,7 +10,7 @@ Live at **[recipes.benneely.com](https://recipes.benneely.com)**
 
 A curated collection of recipes I actually cook, built for use on my phone in the kitchen. Each recipe has three views: a full recipe with scalable ingredients, a mise en place checklist, and a step-by-step cook mode with swipe navigation.
 
-Design constraint: every recipe is a self-contained HTML file. The landing page reads a JS manifest to list and sort them. Nothing requires a server.
+Each recipe is markup + data only — `style.css` and `recipe-engine.js` are shared across every page. The landing page reads a JS manifest to list and sort them. Nothing requires a server.
 
 ## Stack
 
@@ -47,12 +47,19 @@ Each recipe page has three tabs:
 
 ## Adding a recipe
 
+Three ways to do this, in order of how ready each one is:
+
+**1. LLM-assisted (how every recipe so far was actually added).** Give an LLM (Claude, or any capable model with repo read/write access) a GitHub PAT scoped to this repo, point it at `PROJECT_INSTRUCTIONS.md` to orient, and hand it a source recipe — a link, a photo, or pasted text. It builds the ingredient/cook-step data, fills in `recipe-template.html`, adds the manifest entry, and commits directly. This is the primary workflow.
+
+**2. Manual, by hand.**
 1. Copy `recipe-template.html` → `recipes/[new-slug].html`
 2. Fill in `INGREDIENTS`, `COOK_STEPS`, `DIRECTIONS`, title block, intro
 3. Add one entry to `recipes.js`
 4. Commit and push — Cloudflare deploys automatically
 
 See `PROJECT_INSTRUCTIONS.md` for the full ingredient schema, unit escalation rules, and cook step segment format.
+
+**3. A dedicated GUI recipe creator.** Not built. Would live as its own page/tool that outputs the same data shape as the template, so it could either write directly via the GitHub API or just hand you the finished file to commit. Someday, maybe — no active plan.
 
 ## Roadmap
 
