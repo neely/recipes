@@ -60,6 +60,7 @@
   </div>
 
   <div class="recipe-panel">
+    <p class="recipe-source" id="recipe-source"></p>
     <p class="intro-text">INTRO PARAGRAPH — editorial voice, 2–3 sentences on why this recipe works.</p>
     <div class="section-head">Ingredients</div>
     <ul class="ingredients-list" id="recipe-ing-list"></ul>
@@ -147,6 +148,12 @@ const DIRECTIONS = [
   `DIRECTION ONE with <span class="ing-inline">ingredient name</span> callouts.`,
   // add more...
 ];
+
+// ═══════════════════════════════════════════════════════
+// SOURCE — optional. Plain text ("Grandma Neely") or a URL
+// (auto-shortened to just the domain when displayed). Leave "" to omit.
+// ═══════════════════════════════════════════════════════
+const SOURCE = "";
 
 // ═══════════════════════════════════════════════════════
 // BASE SERVES — update to match recipe
