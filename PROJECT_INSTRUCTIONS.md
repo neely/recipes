@@ -156,6 +156,20 @@ The `frac` field supports partial ingredient use in a step (e.g. `frac: 0.5` if 
 
 ---
 
+## Recipe Source (optional)
+
+Each recipe file can define a `SOURCE` constant — a byline shown just above the intro paragraph, e.g. "Source: homesicktexan.com" or "Source: Grandma Neely". One field, auto-detected:
+
+```javascript
+const SOURCE = "Grandma Neely";                                              // plain text, no link
+const SOURCE = "https://www.homesicktexan.com/king-of-casseroles-king-ranch-chicken/";  // URL, renders as a link shortened to the domain
+const SOURCE = "";                                                            // omit entirely
+```
+
+If it starts with `http://` or `https://` it's treated as a link and shortened to just the domain (no `www.`, no path) for display — the full URL is still the link target. Anything else displays as plain text. Rendered by `renderSource()` in the shared engine; hidden entirely if empty.
+
+---
+
 ## Screen Wake Lock (required on every recipe page)
 
 This app's primary use case is mobile, hands-on, at the counter. The phone should not fall asleep mid-recipe. `recipe-engine.js` requests a Screen Wake Lock on load via `navigator.wakeLock`, releases automatically when the tab is backgrounded, and re-acquires it when the tab becomes visible again. Fails silently on unsupported browsers or when denied (e.g. battery saver mode) — no fallback UI, no error shown to the user.
@@ -200,8 +214,10 @@ The `image` field is optional. Omit it (or leave `""`) for recipes without a pho
 2. Fill in the `INGREDIENTS` array and `COOK_STEPS` array
 3. Fill in `DIRECTIONS` (static HTML strings, name callouts only, no quantities)
 4. Update title block, meta row, intro paragraph
-5. Add one entry to `recipes.js`
-6. Commit and push — Cloudflare Pages deploys automatically
+5. Fill in `SOURCE` if there is one (plain text or URL, see schema above), or leave `""` to omit
+6. If a photo is provided, save/crop to `images/[slug].jpg` and add the `image` field to its `recipes.js` entry
+7. Add one entry to `recipes.js`
+8. Commit and push — Cloudflare Pages deploys automatically
 
 ### Ingestion Process (in Claude Project)
 When bringing in a new recipe:
@@ -210,6 +226,7 @@ When bringing in a new recipe:
 - Flag any non-linear ingredients (salt to taste, oil for frying, etc.)
 - Build cook steps as segment arrays, referencing ingredient indices
 - Keep cook steps tight — one clear action per step, readable at a glance
+- If a photo is pasted/uploaded during the session, crop it to the target ~4:3 aspect ratio before committing (see Recipe Images above) — don't just commit it as-is at an arbitrary ratio
 
 ---
 
