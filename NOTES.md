@@ -60,7 +60,11 @@
 - King Ranch Chicken has none currently; harissa (retired) would have used this for "salt to taste"-type lines
 - Examples: "salt to taste", "oil for frying", "water as needed"
 
-### Recipe images (locked)
+### Recipe source (locked)
+- Optional `SOURCE` constant per recipe — plain text ("Grandma Neely") or a URL, auto-detected
+- URLs render as a link shortened to just the domain; plain text renders as-is
+- Byline placement: just above the intro paragraph, below the title block
+- King Ranch Chicken sources to homesicktexan.com (Lisa Fain)
 - Optional `image` field in `recipes.js`, path `images/[slug].jpg`, 4:3 aspect ratio target ~1200×900px
 - Index card only, for now — not surfaced on the recipe page itself
 - No image → card falls back to dark background + italic Playfair first-letter, no broken-image icon
