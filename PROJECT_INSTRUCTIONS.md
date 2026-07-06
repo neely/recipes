@@ -237,6 +237,7 @@ When bringing in a new recipe:
 | `PROJECT_INSTRUCTIONS.md` | This document — paste into Project instructions |
 | `style.css` | Shared design tokens + base styles, used by every recipe page and the template |
 | `recipe-engine.js` | Shared render engine — scaling, tabs, mise, cook mode, wake lock. Edit here, not per-recipe |
+| `apple-touch-icon.png`, `favicon.ico`, `favicon-32x32.png` | Home Screen / browser tab icon — recipe notecard with a tab, full-bleed square (iOS applies its own corner rounding) |
 | `recipe-template.html` | Blank recipe shell to copy for each new recipe — markup + data only |
 | `recipes.js` | Manifest with king ranch chicken entry |
 | `recipes/king-ranch-chicken.html` | First recipe, fully built, use as design reference |
