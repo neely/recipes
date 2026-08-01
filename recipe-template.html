@@ -164,5 +164,12 @@ const SOURCE = "";
 const BASE_SERVES = 4;
 </script>
 <script src="../recipe-engine.js"></script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js').catch(console.error);
+    });
+  }
+</script>
 </body>
 </html>
