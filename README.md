@@ -61,6 +61,13 @@ See `PROJECT_INSTRUCTIONS.md` for the full ingredient schema, unit escalation ru
 
 **3. A dedicated GUI recipe creator.** Not built. Would live as its own page/tool that outputs the same data shape as the template, so it could either write directly via the GitHub API or just hand you the finished file to commit. Someday, maybe — no active plan.
 
+## Feature Add-ons
+
+Added 2026-08-01:
+
+- **Print stylesheet** — the "Print Recipe" button already existed; the `@media print` rules behind it were reworked. It now prints only the Recipe panel (title, meta, ingredients, directions) regardless of which tab was active when you hit print — Mise en Place and Cook mode are on-screen kitchen aids whose content mostly duplicates Directions, so they're excluded rather than dumped onto the page too.
+- **Service worker (`sw.js`)** — deliberately simple: no write API and no fast-changing data file to special-case here (unlike hiking-journal's `hikes.json`), so every same-origin request just gets cache-first with a background revalidate. New recipe pages get cached automatically the first time they're opened. Registered from `index.html`, every recipe page, and `recipe-template.html` — so it's on by default for anything added going forward.
+
 ## Roadmap
 
 See [PLAN.md](PLAN.md).
