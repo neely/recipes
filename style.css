@@ -427,9 +427,18 @@ html, body {
 @keyframes fadeOut { 0%,70% { opacity: 1; } 100% { opacity: 0; } }
 
 @media print {
-  .tabs, .recipe-title-block .scale-row, .print-btn { display: none !important; }
-  .panel { display: block !important; }
-  .cook-panel { background: white !important; }
-  .cook-step-text { color: black !important; font-style: normal; }
-  .cook-steps-track { flex-direction: column; transform: none !important; }
+  html, body { background: #fff; color: #000; }
+
+  /* Only the Recipe panel prints — Mise en Place and Cook mode are
+     on-screen kitchen aids whose content mostly duplicates Directions,
+     and forcing #panel-recipe visible regardless of which tab was active
+     means printing works no matter where you tapped "Print Recipe" from. */
+  .tabs, .recipe-title-block .scale-row, .print-btn,
+  #panel-mise, #panel-cook { display: none !important; }
+  #panel-recipe { display: block !important; }
+
+  .recipe-source a, .ing-inline { color: #000; }
+  .ing-group-title { break-after: avoid; }
+  .ingredients-list li, .directions-list li { break-inside: avoid; }
+  a[href]::after { content: none; } /* skip the browser default "print the URL after the link" */
 }
