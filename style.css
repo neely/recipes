@@ -58,6 +58,23 @@ html, body {
   background: var(--white);
 }
 
+.recipe-hero {
+  display: none;
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: var(--border);
+}
+
+.recipe-hero img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
 .recipe-tag {
   font-family: 'DM Mono', monospace;
   font-size: 9.5px;
@@ -434,7 +451,7 @@ html, body {
      on-screen kitchen aids whose content mostly duplicates Directions,
      and forcing #panel-recipe visible regardless of which tab was active
      means printing works no matter where you tapped "Print Recipe" from. */
-  .tabs, .recipe-title-block .scale-row, .print-btn,
+  .tabs, .recipe-title-block .scale-row, .print-btn, .recipe-hero,
   #panel-mise, #panel-cook { display: none !important; }
   #panel-recipe { display: block !important; }
 
