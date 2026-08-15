@@ -100,6 +100,28 @@ function renderSource() {
   }
 }
 
+// Hero image, sourced from recipes.js (the same manifest that drives the
+// index page) rather than duplicated per-recipe — so any recipe that
+// already has an `image` entry in recipes.js picks this up automatically.
+function currentSlug() {
+  const file = location.pathname.split('/').pop() || '';
+  return file.replace(/\.html$/, '');
+}
+
+function renderHero() {
+  const el = document.getElementById('recipe-hero');
+  if (!el) return;
+  const entry = (typeof RECIPES !== 'undefined')
+    ? RECIPES.find(r => r.slug === currentSlug())
+    : null;
+  if (entry && entry.image) {
+    el.innerHTML = `<img src="../${entry.image}" alt="${entry.title || ''}" loading="lazy">`;
+    el.style.display = 'block';
+  } else {
+    el.style.display = 'none';
+  }
+}
+
 function renderMise() {
   document.getElementById('mise-list').innerHTML = INGREDIENTS.map((ing, i) => {
     const chk = miseChecked.has(i);
@@ -185,6 +207,7 @@ function showTab(name) {
   document.getElementById('panel-' + name).classList.add('active');
 }
 
+renderHero();
 renderRecipeIng();
 renderDirections();
 renderSource();
