@@ -27,7 +27,7 @@ recipes/
 ├── index.html              ← recipe listing / landing page
 ├── style.css                ← shared design tokens + base styles
 ├── recipe-engine.js         ← shared render engine
-├── recipes.js                ← metadata manifest, one entry per recipe
+├── recipes.js                ← metadata manifest (title, tags, times, image) — loaded by index.html AND every recipe page
 ├── recipe-template.html      ← blank shell for new recipes (data only)
 ├── PROJECT_INSTRUCTIONS.md  ← full design system + schema docs
 ├── images/                  ← recipe photos
@@ -39,7 +39,7 @@ recipes/
 
 Each recipe page has three tabs:
 
-**Recipe** — title, meta (prep/cook/total/serves/skill), scale selector (½× 1× 2× 3×), intro paragraph, grouped ingredients with scalable quantities, directions with ingredient callouts, print button.
+**Recipe** — title, hero photo (if one is set for the recipe in `recipes.js`), meta (prep/cook/total/serves/skill), scale selector (½× 1× 2× 3×), intro paragraph, grouped ingredients with scalable quantities, directions with ingredient callouts, print button.
 
 **Mise en Place** — checkable ingredient list with scaled quantities, progress bar, reset button.
 
@@ -49,7 +49,7 @@ Each recipe page has three tabs:
 
 Three ways to do this, in order of how ready each one is:
 
-**1. LLM-assisted (how every recipe so far was actually added).** Give an LLM (Claude, or any capable model with repo read/write access) a GitHub PAT scoped to this repo, point it at `PROJECT_INSTRUCTIONS.md` to orient, and hand it a source recipe — a link, a photo, or pasted text. It builds the ingredient/cook-step data, fills in `recipe-template.html`, adds the manifest entry, and commits directly. This is the primary workflow.
+**1. LLM-assisted (how every recipe so far was actually added).** Give an LLM (Claude, or any capable model with repo read/write access) a GitHub PAT scoped to this repo, point it at `PROJECT_INSTRUCTIONS.md` to orient, and hand it a source recipe — a link, a photo, or pasted text. It builds the ingredient/cook-step data, fills in `recipe-template.html`, adds the manifest entry, and commits directly. This is the primary workflow. When a single change touches multiple files (e.g. an engine + CSS + several recipe pages), batch them into one commit via the Git Data API (blobs → tree → commit → ref update) rather than one commit per file — keeps history readable.
 
 **2. Manual, by hand.**
 1. Copy `recipe-template.html` → `recipes/[new-slug].html`
@@ -61,9 +61,14 @@ See `PROJECT_INSTRUCTIONS.md` for the full ingredient schema, unit escalation ru
 
 **3. A dedicated GUI recipe creator.** Not built. Would live as its own page/tool that outputs the same data shape as the template, so it could either write directly via the GitHub API or just hand you the finished file to commit. Someday, maybe — no active plan.
 
-**Idea, not built: multiple photos per recipe.** A hero image plus a second shot (e.g. plated + a prep-stage photo). Worth noting this would be a bigger step than it sounds — no recipe *detail* page currently shows a photo at all; the `image` field in `recipes.js` only feeds the index-page card. So this would mean turning on photo display for detail pages for the first time, not extending an existing gallery. No active plan.
+**Idea, not built: a second photo per recipe.** As of 2026-08-15, every recipe page shows one hero photo — sourced from the same `image` field in `recipes.js` that already fed the index card, so no per-recipe duplication was needed. A *second* image (e.g. a prep-stage shot or an origin photo alongside the plated hero) is still unbuilt. One has already been banked ahead of time for Caldeirada at `images/caldeirada-2.jpg`, establishing a `[slug]-2.jpg` naming convention for whenever this gets built. No active plan.
 
 ## Feature Add-ons
+
+Added 2026-08-15:
+
+- **Hero image on recipe detail pages** — every recipe page now shows the recipe's photo (if set) right below the title block, full-bleed, 4:3. Pulled at render time from the same `recipes.js` manifest the index page already reads, matched by slug — so `image` stays a single source of truth instead of being duplicated per recipe file. Excluded from print output. Recipes without an `image` entry simply show nothing, no broken-image icon.
+- **Ingredient quantity readability** — fractions were rendering as tiny single-character Unicode glyphs (e.g. "1⅛" as one compressed glyph, easy to misread as "1⅓"). Switched to plain-text fractions ("1 1/8") with a non-breaking space so they can't wrap mid-value, and bumped the quantity font size on both the Recipe and Mise en Place tabs.
 
 Added 2026-08-01:
 
