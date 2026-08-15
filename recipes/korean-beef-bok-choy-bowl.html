@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Korean-Style Beef Bowl with Bok Choy and Gochujang</title>
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400;1,700&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+<div class="tabs">
+  <button class="tab active" onclick="showTab('recipe')">Recipe</button>
+  <button class="tab" onclick="showTab('mise')">Mise en Place</button>
+  <button class="tab" onclick="showTab('cook')">Cook</button>
+</div>
+
+<div class="panel active" id="panel-recipe">
+  <div class="recipe-title-block">
+    <span class="recipe-tag">Korean · Rice Bowl · Weeknight</span>
+    <h1 class="recipe-main-title">Korean-Style Beef Bowl with Bok Choy and Gochujang</h1>
+    <div class="recipe-meta-row">
+      <div class="meta-item"><span class="meta-label">Prep</span><span class="meta-value">20 min</span></div>
+      <div class="meta-item"><span class="meta-label">Cook</span><span class="meta-value">20 min</span></div>
+      <div class="meta-item"><span class="meta-label">Total</span><span class="meta-value">40 min</span></div>
+      <div class="meta-item"><span class="meta-label">Serves</span><span class="meta-value"><span id="serves-display">4</span></span></div>
+      <div class="meta-item"><span class="meta-label">Skill</span><span class="meta-value">Medium</span></div>
+    </div>
+    <div class="scale-row">
+      <span class="scale-label">Scale</span>
+      <div class="scale-pills">
+        <button class="scale-pill" data-scale="0.5" onclick="setScale(0.5)">½×</button>
+        <button class="scale-pill active" data-scale="1" onclick="setScale(1)">1×</button>
+        <button class="scale-pill" data-scale="2" onclick="setScale(2)">2×</button>
+      </div>
+    </div>
+  </div>
+  <div class="recipe-panel">
+    <p class="recipe-source" id="recipe-source"></p>
+    <p class="intro-text">A family favorite, modified from a Blue Apron box meal into something we keep coming back to: seared ground beef and bok choy over rice, a quick vinegar-dressed radish topping, and a gochujang mayo drizzle you can push as spicy as you like. The gochujang amount below is a starting point — add more to taste.</p>
+    <div class="section-head">Ingredients</div>
+    <ul class="ingredients-list" id="recipe-ing-list"></ul>
+    <div class="section-head">Directions</div>
+    <ol class="directions-list" id="recipe-dir-list"></ol>
+    <button class="print-btn" onclick="window.print()">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+      Print Recipe
+    </button>
+  </div>
+</div>
+
+<div class="panel" id="panel-mise">
+  <div class="mise-panel">
+    <div class="mise-progress-wrap">
+      <div class="mise-progress-label">
+        <span>Prep Progress</span>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span id="mise-count">0 / 22</span>
+          <button class="mise-reset" onclick="resetMise()">Reset</button>
+        </div>
+      </div>
+      <div class="mise-bar"><div class="mise-bar-fill" id="mise-bar-fill"></div></div>
+    </div>
+    <p class="mise-intro">Check off each ingredient as you measure and prep. Get everything ready before the pan goes on heat.</p>
+    <ul class="mise-list" id="mise-list"></ul>
+  </div>
+</div>
+
+<div class="panel" id="panel-cook">
+  <div class="cook-panel">
+    <div class="cook-progress-bar"><div class="cook-progress-fill" id="cook-progress-fill"></div></div>
+    <div class="cook-steps-container" id="cook-container">
+      <div class="cook-steps-track" id="cook-track"></div>
+      <div class="swipe-hint">← swipe →</div>
+    </div>
+    <div class="cook-nav">
+      <button class="cook-nav-btn" id="cook-prev" onclick="cookNav(-1)" disabled>←</button>
+      <div class="cook-step-counter"><em id="cook-cur">1</em> / <span id="cook-total">4</span></div>
+      <button class="cook-nav-btn" id="cook-next" onclick="cookNav(1)">→</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const INGREDIENTS = [
+  { group:"Rice",              qty:1,     unit:"cup",  name:"jasmine rice" },
+  { group:"Rice",               qty:2,     unit:"cup",  name:"water" },
+  { group:"Rice",               qty:1,     unit:"pinch",name:"salt, for the rice water (a big pinch)" },
+  { group:"Radish Dressing",    qty:3,     unit:"oz",   name:"radishes (5–10 depending on size), halved lengthwise and thinly sliced crosswise" },
+  { group:"Radish Dressing",    qty:1,     unit:"",     name:"bunch scallions, thinly sliced, divided" },
+  { group:"Radish Dressing",    qty:1,     unit:"tbsp", name:"sesame oil" },
+  { group:"Radish Dressing",    qty:1,     unit:"tbsp", name:"rice vinegar" },
+  { group:"Radish Dressing",    qty:1,     unit:"tsp",  name:"salt, for the dressing" },
+  { group:"Radish Dressing",    qty:0.5,   unit:"tsp",  name:"black pepper, for the dressing" },
+  { group:"Beef & Bok Choy",    qty:1.125, unit:"lb",   name:"ground beef" },
+  { group:"Beef & Bok Choy",    qty:2,     unit:"tbsp", name:"butter" },
+  { group:"Beef & Bok Choy",    qty:2,     unit:"tbsp", name:"garlic, minced" },
+  { group:"Beef & Bok Choy",    qty:2,     unit:"tbsp", name:"ginger, diced" },
+  { group:"Beef & Bok Choy",    qty:1,     unit:"tsp",  name:"salt, for the beef" },
+  { group:"Beef & Bok Choy",    qty:0.5,   unit:"tsp",  name:"black pepper, for the beef" },
+  { group:"Beef & Bok Choy",    qty:1,     unit:"tbsp", name:"sugar" },
+  { group:"Beef & Bok Choy",    qty:2,     unit:"tbsp", name:"soy sauce" },
+  { group:"Beef & Bok Choy",    qty:5,     unit:"",     name:"baby bok choy (4–5 per 15 oz), root end trimmed and thinly sliced" },
+  { group:"Beef & Bok Choy",    qty:1,     unit:"tsp",  name:"salt, to finish the bok choy" },
+  { group:"Gochujang Mayo",     qty:0.25,  unit:"cup",  name:"mayonnaise" },
+  { group:"Gochujang Mayo",     qty:1,     unit:"tsp",  name:"water" },
+  { group:"Gochujang Mayo",     qty:2,     unit:"tsp",  name:"gochujang (more or less to taste)" },
+];
+
+const COOK_STEPS = [
+  [
+    {t:"t",v:"In a medium pot, combine "},
+    {t:"i",i:0,frac:1},
+    {t:"t",v:", a big pinch of "},
+    {t:"i",i:2,frac:1},
+    {t:"t",v:", and "},
+    {t:"i",i:1,frac:1},
+    {t:"t",v:". Bring to a boil over "},
+    {t:"s",v:"high heat"},
+    {t:"t",v:". Once boiling, reduce to low, cover, and cook without stirring "},
+    {t:"s",v:"12 to 14 minutes"},
+    {t:"t",v:", until the water is absorbed and the rice is tender. Turn off heat and fluff with a fork."},
+  ],[
+    {t:"t",v:"While the rice cooks, wash and dry the produce. Trim the root end from the baby bok choy and thinly slice. Halve the "},
+    {t:"i",i:3,frac:1},
+    {t:"t",v:" lengthwise, then thinly slice crosswise. Thinly slice the "},
+    {t:"i",i:4,frac:0.5},
+    {t:"t",v:", reserving the other half for the sauté. In a bowl, combine the sliced radishes with the reserved scallions, "},
+    {t:"i",i:5,frac:1},
+    {t:"t",v:", and "},
+    {t:"i",i:6,frac:1},
+    {t:"t",v:". Season with "},
+    {t:"i",i:7,frac:1},
+    {t:"t",v:" and "},
+    {t:"i",i:8,frac:1},
+    {t:"t",v:"."},
+  ],[
+    {t:"t",v:"While the rice continues to cook, heat "},
+    {t:"i",i:10,frac:1},
+    {t:"t",v:" in a large pan (nonstick if you have one). Add the remaining "},
+    {t:"i",i:4,frac:0.5},
+    {t:"t",v:", "},
+    {t:"i",i:12,frac:1},
+    {t:"t",v:", and "},
+    {t:"i",i:11,frac:1},
+    {t:"t",v:". Sauté over medium-high, "},
+    {t:"s",v:"1 to 2 minutes"},
+    {t:"t",v:". Add the "},
+    {t:"i",i:9,frac:1},
+    {t:"t",v:"; season with "},
+    {t:"i",i:13,frac:1},
+    {t:"t",v:" and "},
+    {t:"i",i:14,frac:1},
+    {t:"t",v:". Cook, stirring and breaking up the meat, "},
+    {t:"s",v:"4 to 5 minutes"},
+    {t:"t",v:", until lightly browned — closer to 10 minutes if not using straight beef. Drain off excess fat if needed. Add the "},
+    {t:"i",i:15,frac:1},
+    {t:"t",v:", "},
+    {t:"i",i:16,frac:1},
+    {t:"t",v:", the sliced bok choy, and another "},
+    {t:"i",i:18,frac:1},
+    {t:"t",v:". Cook, stirring constantly, "},
+    {t:"s",v:"1 to 2 minutes"},
+    {t:"t",v:" — the bok choy should still have some bite. Turn off heat, taste, and adjust salt and pepper if needed."},
+  ],[
+    {t:"t",v:"While the beef cooks, stir together "},
+    {t:"i",i:19,frac:1},
+    {t:"t",v:", "},
+    {t:"i",i:20,frac:1},
+    {t:"t",v:", and "},
+    {t:"i",i:21,frac:1},
+    {t:"t",v:" — more gochujang for more heat. Serve the beef over the rice. Drizzle with the gochujang mayo and top with the dressed radishes, including their liquid."},
+  ],
+];
+
+const DIRECTIONS = [
+  `Combine <span class="ing-inline">jasmine rice</span>, a big pinch of salt, and water in a pot. Bring to a boil, then reduce to low, cover, and cook 12–14 minutes until tender. Fluff with a fork.`,
+  `Trim and thinly slice <span class="ing-inline">baby bok choy</span>. Halve and thinly slice <span class="ing-inline">radishes</span>. Thinly slice <span class="ing-inline">scallions</span>, reserving half. Toss the radishes with the reserved scallions, <span class="ing-inline">sesame oil</span>, and <span class="ing-inline">rice vinegar</span>; season with salt and pepper.`,
+  `Sauté the remaining scallions, <span class="ing-inline">ginger</span>, and <span class="ing-inline">garlic</span> in <span class="ing-inline">butter</span>. Add <span class="ing-inline">ground beef</span>, season, and cook until browned. Stir in <span class="ing-inline">sugar</span>, <span class="ing-inline">soy sauce</span>, and the sliced bok choy; cook briefly, keeping some bite in the bok choy.`,
+  `Whisk <span class="ing-inline">mayonnaise</span>, water, and <span class="ing-inline">gochujang</span> to taste. Serve the beef over rice, drizzle with gochujang mayo, and top with the dressed radishes.`,
+];
+
+const SOURCE = "Modified from Blue Apron";
+
+const BASE_SERVES = 4;
+</script>
+<script src="../recipe-engine.js"></script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js').catch(console.error);
+    });
+  }
+</script>
+</body>
+</html>
