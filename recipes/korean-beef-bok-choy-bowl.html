@@ -96,7 +96,7 @@ const INGREDIENTS = [
   { group:"Radish Dressing",    qty:1,     unit:"tbsp", name:"rice vinegar" },
   { group:"Radish Dressing",    qty:1,     unit:"tsp",  name:"salt, for the dressing" },
   { group:"Radish Dressing",    qty:0.5,   unit:"tsp",  name:"black pepper, for the dressing" },
-  { group:"Beef & Bok Choy",    qty:1.125, unit:"lb",   name:"ground beef" },
+  { group:"Beef & Bok Choy",    qty:1.125, unit:"lb",   name:"ground beef, or a ground plant-based substitute (we usually use Beyond Meat)" },
   { group:"Beef & Bok Choy",    qty:2,     unit:"tbsp", name:"butter" },
   { group:"Beef & Bok Choy",    qty:2,     unit:"tbsp", name:"garlic, minced" },
   { group:"Beef & Bok Choy",    qty:2,     unit:"tbsp", name:"ginger, diced" },
@@ -155,9 +155,11 @@ const COOK_STEPS = [
     {t:"i",i:13,frac:1},
     {t:"t",v:" and "},
     {t:"i",i:14,frac:1},
-    {t:"t",v:". Cook, stirring and breaking up the meat, "},
+    {t:"t",v:". Cook per your protein's instructions, stirring and breaking it up, until browned and cooked through — about "},
     {t:"s",v:"4 to 5 minutes"},
-    {t:"t",v:", until lightly browned — closer to 10 minutes if not using straight beef. Drain off excess fat if needed. Add the "},
+    {t:"t",v:" for beef, closer to "},
+    {t:"s",v:"10 minutes"},
+    {t:"t",v:" for a plant-based grind like Beyond Meat. Drain off excess fat if using beef — Beyond Meat and similar substitutes won't need draining. Add the "},
     {t:"i",i:15,frac:1},
     {t:"t",v:", "},
     {t:"i",i:16,frac:1},
@@ -180,7 +182,7 @@ const COOK_STEPS = [
 const DIRECTIONS = [
   `Combine <span class="ing-inline">jasmine rice</span>, a big pinch of salt, and water in a pot. Bring to a boil, then reduce to low, cover, and cook 12–14 minutes until tender. Fluff with a fork.`,
   `Trim and thinly slice <span class="ing-inline">baby bok choy</span>. Halve and thinly slice <span class="ing-inline">radishes</span>. Thinly slice <span class="ing-inline">scallions</span>, reserving half. Toss the radishes with the reserved scallions, <span class="ing-inline">sesame oil</span>, and <span class="ing-inline">rice vinegar</span>; season with salt and pepper.`,
-  `Sauté the remaining scallions, <span class="ing-inline">ginger</span>, and <span class="ing-inline">garlic</span> in <span class="ing-inline">butter</span>. Add <span class="ing-inline">ground beef</span>, season, and cook until browned. Stir in <span class="ing-inline">sugar</span>, <span class="ing-inline">soy sauce</span>, and the sliced bok choy; cook briefly, keeping some bite in the bok choy.`,
+  `Sauté the remaining scallions, <span class="ing-inline">ginger</span>, and <span class="ing-inline">garlic</span> in <span class="ing-inline">butter</span>. Add <span class="ing-inline">ground beef (or Beyond Meat)</span>, season, and cook per that protein's instructions until browned through — drain excess fat for beef, but skip draining for Beyond Meat. Stir in <span class="ing-inline">sugar</span>, <span class="ing-inline">soy sauce</span>, and the sliced bok choy; cook briefly, keeping some bite in the bok choy.`,
   `Whisk <span class="ing-inline">mayonnaise</span>, water, and <span class="ing-inline">gochujang</span> to taste. Serve the beef over rice, drizzle with gochujang mayo, and top with the dressed radishes.`,
 ];
 
