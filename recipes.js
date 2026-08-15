@@ -13,5 +13,15 @@ const RECIPES = [
     skill:    "medium",
     added:    "2025-07-05",
     image:    "images/king-ranch-chicken.jpg",
+  },
+  {
+    slug:     "caldeirada",
+    title:    "Caldeirada",
+    tags:     ["fish", "stew", "portuguese", "one-pot"],
+    prepMins: 15,
+    cookMins: 30,
+    serves:   4,
+    skill:    "easy",
+    added:    "2026-08-15",
   }
 ];
