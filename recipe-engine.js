@@ -12,7 +12,7 @@
 // This file then renders everything and wires up all interactivity.
 // Do not edit per-recipe — change here and it applies to every recipe.
 
-const FRACS = [[0.125,'⅛'],[0.25,'¼'],[0.333,'⅓'],[0.5,'½'],[0.667,'⅔'],[0.75,'¾']];
+const FRACS = [[0.125,'1/8'],[0.25,'1/4'],[0.333,'1/3'],[0.5,'1/2'],[0.667,'2/3'],[0.75,'3/4']];
 
 function toFrac(v) {
   if (v <= 0) return '—';
@@ -20,7 +20,7 @@ function toFrac(v) {
   const whole = Math.floor(v);
   const frac = +(v - whole).toFixed(3);
   for (const [f, sym] of FRACS) {
-    if (Math.abs(frac - f) < 0.04) return (whole > 0 ? whole : '') + sym;
+    if (Math.abs(frac - f) < 0.04) return (whole > 0 ? whole + '\u00A0' : '') + sym;
   }
   return Math.round(v * 10) / 10;
 }
