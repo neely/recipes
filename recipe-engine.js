@@ -14,6 +14,18 @@
 
 const FRACS = [[0.125,'1/8'],[0.25,'1/4'],[0.333,'1/3'],[0.5,'1/2'],[0.667,'2/3'],[0.75,'3/4']];
 
+// Display labels for canonical unit keys — kept separate from the keys
+// themselves so escalation logic (tsp→tbsp→cup) can keep matching on
+// stable lowercase keys while the on-screen abbreviation follows kitchen
+// convention: lowercase "tsp" for teaspoon, capital "Tbsp" for tablespoon,
+// so the two can't be confused at a glance.
+const UNIT_LABELS = {
+  tsp: 'tsp', tbsp: 'Tbsp', cup: 'cup', fl_oz: 'fl oz',
+  pint: 'pint', quart: 'quart', oz: 'oz', lb: 'lb',
+  cloves: 'cloves', handful: 'handful', pinch: 'pinch', sprig: 'sprig',
+};
+function unitLabel(u) { return UNIT_LABELS[u] ?? u; }
+
 function toFrac(v) {
   if (v <= 0) return '—';
   if (v === Math.floor(v)) return String(v);
@@ -42,7 +54,7 @@ function fmtQtyUnit(baseQty, baseUnit, sc) {
     const asCups = v / 16;
     if (v >= 4 && isClean(asCups)) { v = asCups; unit = 'cup'; }
   }
-  return { qty: toFrac(v), unit };
+  return { qty: toFrac(v), unit: unitLabel(unit) };
 }
 
 function ingSpan(i, frac) {
