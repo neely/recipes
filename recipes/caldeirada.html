@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Caldeirada</title>
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400;1,700&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+<div class="tabs">
+  <button class="tab active" onclick="showTab('recipe')">Recipe</button>
+  <button class="tab" onclick="showTab('mise')">Mise en Place</button>
+  <button class="tab" onclick="showTab('cook')">Cook</button>
+</div>
+
+<div class="panel active" id="panel-recipe">
+  <div class="recipe-title-block">
+    <span class="recipe-tag">Portuguese · Stew · One-Pot</span>
+    <h1 class="recipe-main-title">Caldeirada</h1>
+    <div class="recipe-meta-row">
+      <div class="meta-item"><span class="meta-label">Prep</span><span class="meta-value">15 min</span></div>
+      <div class="meta-item"><span class="meta-label">Cook</span><span class="meta-value">30 min</span></div>
+      <div class="meta-item"><span class="meta-label">Total</span><span class="meta-value">45 min</span></div>
+      <div class="meta-item"><span class="meta-label">Serves</span><span class="meta-value"><span id="serves-display">4</span></span></div>
+      <div class="meta-item"><span class="meta-label">Skill</span><span class="meta-value">Easy</span></div>
+    </div>
+    <div class="scale-row">
+      <span class="scale-label">Scale</span>
+      <div class="scale-pills">
+        <button class="scale-pill" data-scale="0.5" onclick="setScale(0.5)">½×</button>
+        <button class="scale-pill active" data-scale="1" onclick="setScale(1)">1×</button>
+        <button class="scale-pill" data-scale="2" onclick="setScale(2)">2×</button>
+        <button class="scale-pill" data-scale="3" onclick="setScale(3)">3×</button>
+      </div>
+    </div>
+  </div>
+  <div class="recipe-panel">
+    <p class="recipe-source" id="recipe-source"></p>
+    <p class="intro-text">A garlicky, wine-and-tomato fish (or chicken) stew, finished with a single layer of thinly sliced potato that steams on top instead of getting stirred in. Loose on exact vegetable amounts by design — vary the peppers, swap proteins, use sweet potato instead of yukon gold. Scales easily for a crowd: multiply everything but the potato, since a thin layer is enough regardless of batch size, and give it a little extra time to come up to a boil.</p>
+    <div class="section-head">Ingredients</div>
+    <ul class="ingredients-list" id="recipe-ing-list"></ul>
+    <div class="section-head">Directions</div>
+    <ol class="directions-list" id="recipe-dir-list"></ol>
+    <button class="print-btn" onclick="window.print()">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+      Print Recipe
+    </button>
+  </div>
+</div>
+
+<div class="panel" id="panel-mise">
+  <div class="mise-panel">
+    <div class="mise-progress-wrap">
+      <div class="mise-progress-label">
+        <span>Prep Progress</span>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span id="mise-count">0 / 11</span>
+          <button class="mise-reset" onclick="resetMise()">Reset</button>
+        </div>
+      </div>
+      <div class="mise-bar"><div class="mise-bar-fill" id="mise-bar-fill"></div></div>
+    </div>
+    <p class="mise-intro">Check off each ingredient as you measure and prep. Get everything ready before the pan goes on heat.</p>
+    <ul class="mise-list" id="mise-list"></ul>
+  </div>
+</div>
+
+<div class="panel" id="panel-cook">
+  <div class="cook-panel">
+    <div class="cook-progress-bar"><div class="cook-progress-fill" id="cook-progress-fill"></div></div>
+    <div class="cook-steps-container" id="cook-container">
+      <div class="cook-steps-track" id="cook-track"></div>
+      <div class="swipe-hint">← swipe →</div>
+    </div>
+    <div class="cook-nav">
+      <button class="cook-nav-btn" id="cook-prev" onclick="cookNav(-1)" disabled>←</button>
+      <div class="cook-step-counter"><em id="cook-cur">1</em> / <span id="cook-total">8</span></div>
+      <button class="cook-nav-btn" id="cook-next" onclick="cookNav(1)">→</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const INGREDIENTS = [
+  { group:"Stew Base", qty:0.5,  unit:"cup",  name:"extra virgin olive oil" },
+  { group:"Stew Base", qty:0.5,  unit:"cup",  name:"dry white wine (chardonnay or pinot grigio)" },
+  { group:"Stew Base", qty:1,    unit:"tbsp", name:"garlic, minced (more is better)" },
+  { group:"Stew Base", qty:1,    unit:"",     name:"medium-large onion (white, yellow, or vidalia), halved and sliced" },
+  { group:"Stew Base", qty:1,    unit:"",     name:"tomato, cut into wedges (more or less to taste)" },
+  { group:"Stew Base", qty:3,    unit:"",     name:"bell peppers (try 2 orange, 1 yellow), sliced" },
+  { group:"Stew Base", qty:0,    unit:"",     name:"bay leaves", scalable:false, label:"1 per fish fillet or chicken breast" },
+  { group:"Stew Base", qty:0,    unit:"tsp",  name:"curry powder", scalable:false, label:"A smidgen" },
+  { group:"Stew Base", qty:0,    unit:"",     name:"salt and pepper", scalable:false, label:"To taste" },
+  { group:"Protein",   qty:1,    unit:"lb",   name:"fish or chicken, cut into 1-inch cubes" },
+  { group:"Topping",   qty:0,    unit:"",     name:"potato (yukon gold or sweet potato), thinly sliced", scalable:false, label:"Enough for one layer on top" },
+];
+
+const COOK_STEPS = [
+  [
+    {t:"t",v:"In a large pot (chili-pot size), combine "},
+    {t:"i",i:0,frac:1},
+    {t:"t",v:", "},
+    {t:"i",i:1,frac:1},
+    {t:"t",v:", "},
+    {t:"i",i:2,frac:1},
+    {t:"t",v:", "},
+    {t:"i",i:3,frac:1},
+    {t:"t",v:", "},
+    {t:"i",i:4,frac:1},
+    {t:"t",v:", "},
+    {t:"i",i:5,frac:1},
+    {t:"t",v:", "},
+    {t:"i",i:6,frac:1},
+    {t:"t",v:", and "},
+    {t:"i",i:7,frac:1},
+    {t:"t",v:". Stir to combine."},
+  ],[
+    {t:"t",v:"Season with "},
+    {t:"i",i:8,frac:1},
+    {t:"t",v:" to taste."},
+  ],[
+    {t:"t",v:"Add the cubed "},
+    {t:"i",i:9,frac:1},
+    {t:"t",v:" and stir it into the mixture."},
+  ],[
+    {t:"t",v:"Thinly slice the "},
+    {t:"i",i:10,frac:1},
+    {t:"t",v:" — thickness determines cooking time — and lay it in a single layer on top. Don't stir it in."},
+  ],[
+    {t:"t",v:"Bring to a boil over "},
+    {t:"s",v:"medium heat"},
+    {t:"t",v:", then cover and reduce to "},
+    {t:"s",v:"medium or medium-low"},
+    {t:"t",v:". Cook "},
+    {t:"s",v:"20 minutes"},
+    {t:"t",v:"."},
+  ],[
+    {t:"t",v:"Check the potato layer for doneness. If it's not done yet, check the meat — if the meat is done but the potatoes aren't, stir the potatoes under and keep cooking. Otherwise, stir the potatoes under now."},
+  ],[
+    {t:"t",v:"Cover and cook "},
+    {t:"s",v:"10 more minutes"},
+    {t:"t",v:"."},
+  ],[
+    {t:"t",v:"Serve in bowls."},
+  ],
+];
+
+const DIRECTIONS = [
+  `Combine <span class="ing-inline">olive oil</span>, <span class="ing-inline">white wine</span>, <span class="ing-inline">garlic</span>, <span class="ing-inline">onion</span>, <span class="ing-inline">tomato</span>, <span class="ing-inline">bell peppers</span>, <span class="ing-inline">bay leaves</span>, and <span class="ing-inline">curry powder</span> in a large pot. Stir to combine.`,
+  `Season with <span class="ing-inline">salt and pepper</span> to taste.`,
+  `Add cubed <span class="ing-inline">fish or chicken</span> and stir into the mixture.`,
+  `Thinly slice <span class="ing-inline">potato</span> and lay in a single layer on top — don't stir it in.`,
+  `Bring to a boil over medium heat, then cover and cook at medium or medium-low for 20 minutes.`,
+  `Check the potatoes. If the meat is done but the potatoes aren't, stir the potatoes under and keep cooking.`,
+  `Stir the potatoes under and cook 10 more minutes, covered.`,
+  `Serve in bowls. Note: smaller fish pieces are more prone to falling apart when boiled — cut accordingly. Yields 3–4 servings; when scaling up, potatoes don't need to increase proportionally.`,
+];
+
+const SOURCE = "";
+
+const BASE_SERVES = 4;
+</script>
+<script src="../recipe-engine.js"></script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js').catch(console.error);
+    });
+  }
+</script>
+</body>
+</html>
