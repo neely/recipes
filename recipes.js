@@ -23,5 +23,16 @@ const RECIPES = [
     serves:   4,
     skill:    "easy",
     added:    "2026-08-15",
+  },
+  {
+    slug:     "korean-beef-bok-choy-bowl",
+    title:    "Korean-Style Beef Bowl with Bok Choy and Gochujang",
+    tags:     ["beef", "korean", "rice-bowl", "weeknight"],
+    prepMins: 20,
+    cookMins: 20,
+    serves:   4,
+    skill:    "medium",
+    added:    "2026-08-15",
+    image:    "images/korean-beef-bok-choy-bowl.jpg",
   }
 ];
