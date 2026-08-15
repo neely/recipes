@@ -61,6 +61,8 @@ See `PROJECT_INSTRUCTIONS.md` for the full ingredient schema, unit escalation ru
 
 **3. A dedicated GUI recipe creator.** Not built. Would live as its own page/tool that outputs the same data shape as the template, so it could either write directly via the GitHub API or just hand you the finished file to commit. Someday, maybe — no active plan.
 
+**Idea, not built: multiple photos per recipe.** A hero image plus a second shot (e.g. plated + a prep-stage photo). Worth noting this would be a bigger step than it sounds — no recipe *detail* page currently shows a photo at all; the `image` field in `recipes.js` only feeds the index-page card. So this would mean turning on photo display for detail pages for the first time, not extending an existing gallery. No active plan.
+
 ## Feature Add-ons
 
 Added 2026-08-01:
