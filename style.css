@@ -201,7 +201,7 @@ html, body {
 
 .ing-item {
   display: grid;
-  grid-template-columns: 80px 1fr;
+  grid-template-columns: 92px 1fr;
   gap: 12px;
   padding: 10px 0;
   border-bottom: 1px solid var(--border);
@@ -211,8 +211,8 @@ html, body {
 
 .ing-qty {
   font-family: 'DM Mono', monospace;
-  font-size: 12.5px;
-  font-weight: 500;
+  font-size: 16px;
+  font-weight: 600;
   color: var(--rust);
   text-align: right;
   padding-top: 1px;
@@ -333,7 +333,7 @@ html, body {
 .mise-item.checked .mise-check-icon { display: block; }
 
 .mise-text { flex: 1; font-size: 15px; line-height: 1.4; }
-.mise-qty { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--rust); }
+.mise-qty { font-family: 'DM Mono', monospace; font-size: 15px; font-weight: 600; color: var(--rust); }
 .mise-item.checked .mise-text { text-decoration: line-through; }
 
 /* ── COOK PANEL ── */
