@@ -43,7 +43,7 @@
   <div class="recipe-hero" id="recipe-hero"></div>
   <div class="recipe-panel">
     <p class="recipe-source" id="recipe-source"></p>
-    <p class="intro-text">A garlicky, wine-and-tomato fish (or chicken) stew, finished with a single layer of thinly sliced potato that steams on top instead of getting stirred in. Loose on exact vegetable amounts by design — vary the peppers, swap proteins, use sweet potato instead of yukon gold. Scales easily for a crowd: multiply everything but the potato, since a thin layer is enough regardless of batch size, and give it a little extra time to come up to a boil.</p>
+    <p class="intro-text">A garlicky, wine-and-tomato fish (or chicken) stew, finished with a shingled, single layer of thinly sliced potato that steams on top instead of getting stirred in. Loose on exact vegetable amounts by design — vary the peppers, swap proteins, use sweet potato instead of yukon gold. Scales easily for a crowd: multiply everything but the potatoes, since a thin overlapping layer is enough regardless of batch size, and give it a little extra time to come up to a boil.</p>
     <div class="section-head">Ingredients</div>
     <ul class="ingredients-list" id="recipe-ing-list"></ul>
     <div class="section-head">Directions</div>
@@ -61,7 +61,7 @@
       <div class="mise-progress-label">
         <span>Prep Progress</span>
         <div style="display:flex;align-items:center;gap:10px;">
-          <span id="mise-count">0 / 11</span>
+          <span id="mise-count">0 / 12</span>
           <button class="mise-reset" onclick="resetMise()">Reset</button>
         </div>
       </div>
@@ -89,17 +89,18 @@
 
 <script>
 const INGREDIENTS = [
-  { group:"Stew Base", qty:0.5,  unit:"cup",  name:"extra virgin olive oil" },
-  { group:"Stew Base", qty:0.5,  unit:"cup",  name:"dry white wine (chardonnay or pinot grigio)" },
-  { group:"Stew Base", qty:1,    unit:"tbsp", name:"garlic, minced (more is better)" },
-  { group:"Stew Base", qty:1,    unit:"",     name:"medium-large onion (white, yellow, or vidalia), halved and sliced" },
-  { group:"Stew Base", qty:1,    unit:"",     name:"tomato, cut into wedges (more or less to taste)" },
-  { group:"Stew Base", qty:3,    unit:"",     name:"bell peppers (try 2 orange, 1 yellow), sliced" },
-  { group:"Stew Base", qty:0,    unit:"",     name:"bay leaves", scalable:false, label:"1 per fish fillet or chicken breast" },
-  { group:"Stew Base", qty:0,    unit:"tsp",  name:"curry powder", scalable:false, label:"A smidgen" },
-  { group:"Stew Base", qty:0,    unit:"",     name:"salt and pepper", scalable:false, label:"To taste" },
-  { group:"Protein",   qty:1,    unit:"lb",   name:"fish or chicken, cut into 1-inch cubes" },
-  { group:"Topping",   qty:0,    unit:"",     name:"potato (yukon gold or sweet potato), thinly sliced", scalable:false, label:"Enough for one layer on top" },
+  { group:"Stew Base", qty:0.5,   unit:"cup",  name:"extra virgin olive oil" },
+  { group:"Stew Base", qty:0.5,   unit:"cup",  name:"dry white wine (chardonnay or pinot grigio)" },
+  { group:"Stew Base", qty:1,     unit:"tbsp", name:"garlic, minced (more is better)" },
+  { group:"Stew Base", qty:1,     unit:"",     name:"medium-large onion (white, yellow, or vidalia), halved and sliced" },
+  { group:"Stew Base", qty:1,     unit:"",     name:"tomato, cut into wedges (more or less to taste)" },
+  { group:"Stew Base", qty:3,     unit:"",     name:"bell peppers (try 2 orange, 1 yellow), sliced" },
+  { group:"Stew Base", qty:3,     unit:"",     name:"bay leaves (roughly 1 per fish fillet or chicken breast used)" },
+  { group:"Stew Base", qty:0.125, unit:"tsp",  name:"curry powder" },
+  { group:"Stew Base", qty:1,     unit:"tsp",  name:"salt, plus more to taste" },
+  { group:"Stew Base", qty:0.5,   unit:"tsp",  name:"black pepper, plus more to taste" },
+  { group:"Protein",   qty:1,     unit:"lb",   name:"fish or chicken, cut into 1-inch cubes" },
+  { group:"Topping",   qty:3,     unit:"",     name:"yukon gold potatoes, thinly sliced", scalable:false, label:"3" },
 ];
 
 const COOK_STEPS = [
@@ -118,21 +119,21 @@ const COOK_STEPS = [
     {t:"i",i:5,frac:1},
     {t:"t",v:", "},
     {t:"i",i:6,frac:1},
-    {t:"t",v:", and "},
+    {t:"t",v:", "},
     {t:"i",i:7,frac:1},
-    {t:"t",v:". Stir to combine."},
-  ],[
-    {t:"t",v:"Season with "},
+    {t:"t",v:", "},
     {t:"i",i:8,frac:1},
-    {t:"t",v:" to taste."},
+    {t:"t",v:", and "},
+    {t:"i",i:9,frac:1},
+    {t:"t",v:". Stir to combine — this is your last easy chance to adjust salt and pepper before the protein and potatoes go in."},
   ],[
     {t:"t",v:"Add the cubed "},
-    {t:"i",i:9,frac:1},
+    {t:"i",i:10,frac:1},
     {t:"t",v:" and stir it into the mixture."},
   ],[
     {t:"t",v:"Thinly slice the "},
-    {t:"i",i:10,frac:1},
-    {t:"t",v:" — thickness determines cooking time — and lay it in a single layer on top. Don't stir it in."},
+    {t:"i",i:11,frac:1},
+    {t:"t",v:" — thinner slices cook faster and more evenly. Lay them in a single layer on top with slight overlap, like shingles, to help seal in steam. If any slices are too thick, or you have extras left over, tuck them vertically down into the mix along the edges instead of leaving them on top."},
   ],[
     {t:"t",v:"Bring to a boil over "},
     {t:"s",v:"medium heat"},
@@ -142,25 +143,21 @@ const COOK_STEPS = [
     {t:"s",v:"20 minutes"},
     {t:"t",v:"."},
   ],[
-    {t:"t",v:"Check the potato layer for doneness. If it's not done yet, check the meat — if the meat is done but the potatoes aren't, stir the potatoes under and keep cooking. Otherwise, stir the potatoes under now."},
-  ],[
-    {t:"t",v:"Cover and cook "},
-    {t:"s",v:"10 more minutes"},
-    {t:"t",v:"."},
+    {t:"t",v:"At the 20-minute mark, stir the potatoes under regardless of how done they look. Continue cooking, covered — this often takes "},
+    {t:"s",v:"10 or more additional minutes"},
+    {t:"t",v:". The dish is done when the potatoes are done."},
   ],[
     {t:"t",v:"Serve in bowls."},
   ],
 ];
 
 const DIRECTIONS = [
-  `Combine <span class="ing-inline">olive oil</span>, <span class="ing-inline">white wine</span>, <span class="ing-inline">garlic</span>, <span class="ing-inline">onion</span>, <span class="ing-inline">tomato</span>, <span class="ing-inline">bell peppers</span>, <span class="ing-inline">bay leaves</span>, and <span class="ing-inline">curry powder</span> in a large pot. Stir to combine.`,
-  `Season with <span class="ing-inline">salt and pepper</span> to taste.`,
-  `Add cubed <span class="ing-inline">fish or chicken</span> and stir into the mixture.`,
-  `Thinly slice <span class="ing-inline">potato</span> and lay in a single layer on top — don't stir it in.`,
+  `Combine <span class="ing-inline">olive oil</span>, <span class="ing-inline">white wine</span>, <span class="ing-inline">garlic</span>, <span class="ing-inline">onion</span>, <span class="ing-inline">tomato</span>, <span class="ing-inline">bell peppers</span>, <span class="ing-inline">bay leaves</span>, <span class="ing-inline">curry powder</span>, <span class="ing-inline">salt</span>, and <span class="ing-inline">pepper</span> in a large pot. Stir to combine — adjust salt and pepper to taste now, before the protein and potatoes go in.`,
+  `Add cubed <span class="ing-inline">fish or chicken</span> and stir into the mixture. Smaller fish pieces are more prone to falling apart when boiled — cut accordingly.`,
+  `Thinly slice <span class="ing-inline">potatoes</span> and lay in a single layer on top with slight overlap, like shingles, to seal in steam. Tuck any thick or extra slices vertically along the edges instead of on top.`,
   `Bring to a boil over medium heat, then cover and cook at medium or medium-low for 20 minutes.`,
-  `Check the potatoes. If the meat is done but the potatoes aren't, stir the potatoes under and keep cooking.`,
-  `Stir the potatoes under and cook 10 more minutes, covered.`,
-  `Serve in bowls. Note: smaller fish pieces are more prone to falling apart when boiled — cut accordingly. Yields 3–4 servings; when scaling up, potatoes don't need to increase proportionally.`,
+  `Stir the potatoes under at the 20-minute mark regardless of doneness, then keep cooking, covered, until everything is tender — often 10 or more additional minutes. It's done when the potatoes are done.`,
+  `Serve in bowls. Yields 3–4 servings; when scaling up, the potatoes don't need to increase proportionally.`,
 ];
 
 const SOURCE = "Margarida Togtema — taught to me in Buitenpost, Netherlands, summer 2002";
