@@ -23,6 +23,7 @@ const RECIPES = [
     serves:   4,
     skill:    "easy",
     added:    "2026-08-15",
+    image:    "images/caldeirada.jpg",
   },
   {
     slug:     "korean-beef-bok-choy-bowl",
