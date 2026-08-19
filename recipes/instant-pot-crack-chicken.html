@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Instant Pot Crack Chicken</title>
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400;1,700&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+<div class="tabs">
+  <button class="tab active" onclick="showTab('recipe')">Recipe</button>
+  <button class="tab" onclick="showTab('mise')">Mise en Place</button>
+  <button class="tab" onclick="showTab('cook')">Cook</button>
+</div>
+
+<div class="panel active" id="panel-recipe">
+  <div class="recipe-title-block">
+    <span class="recipe-tag">Chicken · Instant Pot · Weeknight</span>
+    <h1 class="recipe-main-title">Instant Pot Crack Chicken</h1>
+    <div class="recipe-meta-row">
+      <div class="meta-item"><span class="meta-label">Prep</span><span class="meta-value">12 min</span></div>
+      <div class="meta-item"><span class="meta-label">Cook</span><span class="meta-value">30 min</span></div>
+      <div class="meta-item"><span class="meta-label">Total</span><span class="meta-value">42 min</span></div>
+      <div class="meta-item"><span class="meta-label">Serves</span><span class="meta-value"><span id="serves-display">8</span></span></div>
+      <div class="meta-item"><span class="meta-label">Skill</span><span class="meta-value">Easy</span></div>
+    </div>
+    <div class="scale-row">
+      <span class="scale-label">Scale</span>
+      <div class="scale-pills">
+        <button class="scale-pill" data-scale="0.5" onclick="setScale(0.5)">½×</button>
+        <button class="scale-pill active" data-scale="1" onclick="setScale(1)">1×</button>
+        <button class="scale-pill" data-scale="2" onclick="setScale(2)">2×</button>
+      </div>
+    </div>
+  </div>
+  <div class="recipe-hero" id="recipe-hero"></div>
+  <div class="recipe-panel">
+    <p class="recipe-source" id="recipe-source"></p>
+    <p class="intro-text">Neighbor Raymond's pick — he says his kids love it. A shredded chicken loaded with ranch seasoning, cream cheese, cheddar, and bacon, built almost entirely hands-off in the pressure cooker. Everything but the finishing touches goes in raw; 12 minutes at pressure does the heavy lifting. Serve piled on buns, over rice, or tossed with pasta. Untested here so far — added ahead of the first attempt.</p>
+    <div class="section-head">Ingredients</div>
+    <ul class="ingredients-list" id="recipe-ing-list"></ul>
+    <div class="section-head">Directions</div>
+    <ol class="directions-list" id="recipe-dir-list"></ol>
+    <button class="print-btn" onclick="window.print()">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+      Print Recipe
+    </button>
+  </div>
+</div>
+
+<div class="panel" id="panel-mise">
+  <div class="mise-panel">
+    <div class="mise-progress-wrap">
+      <div class="mise-progress-label">
+        <span>Prep Progress</span>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span id="mise-count">0 / 14</span>
+          <button class="mise-reset" onclick="resetMise()">Reset</button>
+        </div>
+      </div>
+      <div class="mise-bar"><div class="mise-bar-fill" id="mise-bar-fill"></div></div>
+    </div>
+    <p class="mise-intro">Check off each ingredient as you measure and prep. Get everything ready before the pot goes on.</p>
+    <ul class="mise-list" id="mise-list"></ul>
+  </div>
+</div>
+
+<div class="panel" id="panel-cook">
+  <div class="cook-panel">
+    <div class="cook-progress-bar"><div class="cook-progress-fill" id="cook-progress-fill"></div></div>
+    <div class="cook-steps-container" id="cook-container">
+      <div class="cook-steps-track" id="cook-track"></div>
+      <div class="swipe-hint">← swipe →</div>
+    </div>
+    <div class="cook-nav">
+      <button class="cook-nav-btn" id="cook-prev" onclick="cookNav(-1)" disabled>←</button>
+      <div class="cook-step-counter"><em id="cook-cur">1</em> / <span id="cook-total">8</span></div>
+      <button class="cook-nav-btn" id="cook-next" onclick="cookNav(1)">→</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const INGREDIENTS = [
+  { group:"Pressure Cooker", qty:0.5,  unit:"cup", name:"water (or no-sodium chicken broth)" },
+  { group:"Pressure Cooker", qty:2,    unit:"lb",  name:"boneless, skinless chicken breasts (about 4 8-oz breasts)" },
+  { group:"Pressure Cooker", qty:1,    unit:"",    name:"packet ranch dressing mix (about 1 oz)" },
+  { group:"Pressure Cooker", qty:1.5,  unit:"tsp", name:"garlic powder" },
+  { group:"Pressure Cooker", qty:0.5,  unit:"tsp", name:"onion powder" },
+  { group:"Pressure Cooker", qty:0.75, unit:"tsp", name:"dried dill weed" },
+  { group:"Pressure Cooker", qty:2,    unit:"tsp", name:"dried parsley" },
+  { group:"Pressure Cooker", qty:0.5,  unit:"tsp", name:"black pepper" },
+  { group:"Pressure Cooker", qty:0.5,  unit:"tsp", name:"smoked paprika" },
+  { group:"Pressure Cooker", qty:8,    unit:"oz",  name:"cream cheese, room temperature, broken into chunks" },
+  { group:"To Finish",       qty:1,    unit:"cup", name:"cheddar cheese, shredded (block, not bagged, melts better)" },
+  { group:"To Finish",       qty:8,    unit:"",    name:"slices thick-cut bacon, cooked and chopped" },
+  { group:"To Finish",       qty:3,    unit:"",    name:"green onions, chopped" },
+  { group:"To Finish",       qty:0.25, unit:"tsp", name:"salt, to taste (optional — taste before adding)" },
+];
+
+const COOK_STEPS = [
+  [
+    {t:"t",v:"Add "},
+    {t:"i",i:0,frac:1},
+    {t:"t",v:" to the pressure cooker's inner pot. Add the "},
+    {t:"i",i:1,frac:1},
+    {t:"t",v:", arranging them in as close to a single layer as possible for even cooking."},
+  ],[
+    {t:"t",v:"Sprinkle the "},
+    {t:"i",i:2,frac:1},
+    {t:"t",v:" over the chicken, followed by the "},
+    {t:"i",i:3,frac:1},
+    {t:"t",v:", "},
+    {t:"i",i:4,frac:1},
+    {t:"t",v:", "},
+    {t:"i",i:5,frac:1},
+    {t:"t",v:", "},
+    {t:"i",i:6,frac:1},
+    {t:"t",v:", "},
+    {t:"i",i:7,frac:1},
+    {t:"t",v:", and "},
+    {t:"i",i:8,frac:1},
+    {t:"t",v:"."},
+  ],[
+    {t:"t",v:"Break the "},
+    {t:"i",i:9,frac:1},
+    {t:"t",v:" into chunks and scatter it over the top. Seal the lid and pressure cook on "},
+    {t:"s",v:"High for 12 minutes"},
+    {t:"t",v:" — up to "},
+    {t:"s",v:"20 minutes"},
+    {t:"t",v:" for very thick breasts. The pot will take several minutes just to come up to pressure before the timer starts."},
+  ],[
+    {t:"t",v:"When the cook cycle ends, let it sit undisturbed for a "},
+    {t:"s",v:"10-minute natural release"},
+    {t:"t",v:", then manually vent any remaining pressure."},
+  ],[
+    {t:"t",v:"Once the pin drops, open the lid and move the chicken to a plate or bowl. If the liquid looks watery — more likely with frozen or water-injected chicken — spoon some of it off."},
+  ],[
+    {t:"t",v:"Whisk the cream cheese mixture left in the pot until smooth, then whisk in the "},
+    {t:"i",i:10,frac:1},
+    {t:"t",v:" a little at a time until melted."},
+  ],[
+    {t:"t",v:"Shred the chicken with two forks — leave some texture rather than shredding it to mush — and stir it back into the pot along with the "},
+    {t:"i",i:11,frac:1},
+    {t:"t",v:" and "},
+    {t:"i",i:12,frac:1},
+    {t:"t",v:"."},
+  ],[
+    {t:"t",v:"Taste before adding the "},
+    {t:"i",i:13,frac:1},
+    {t:"t",v:" — it may not need it. Serve on buns, over rice, or with pasta."},
+  ],
+];
+
+const DIRECTIONS = [
+  `Add <span class="ing-inline">water or broth</span> to the pot, then arrange the <span class="ing-inline">chicken breasts</span> in as close to a single layer as possible.`,
+  `Sprinkle <span class="ing-inline">ranch dressing mix</span>, <span class="ing-inline">garlic powder</span>, <span class="ing-inline">onion powder</span>, <span class="ing-inline">dill</span>, <span class="ing-inline">parsley</span>, <span class="ing-inline">pepper</span>, and <span class="ing-inline">smoked paprika</span> over the chicken.`,
+  `Break <span class="ing-inline">cream cheese</span> into chunks over the top. Seal the lid and pressure cook on High for 12 minutes (up to 20 for thick breasts).`,
+  `Let the pot sit for a 10-minute natural release, then vent any remaining pressure.`,
+  `Move the chicken to a plate or bowl. Spoon off excess liquid if it looks watery.`,
+  `Whisk the pot's cream cheese mixture smooth, then whisk in <span class="ing-inline">cheddar cheese</span> until melted.`,
+  `Shred the chicken with two forks, keeping some texture, and stir it back in with the <span class="ing-inline">bacon</span> and <span class="ing-inline">green onions</span>.`,
+  `Taste before adding <span class="ing-inline">salt</span>. Serve on buns, over rice, or with pasta.`,
+];
+
+const SOURCE = "From neighbor Raymond — he says his kids love it. Recipe follows Simply Happy Foodie's Instant Pot Crack Chicken (simplyhappyfoodie.com).";
+
+const BASE_SERVES = 8;
+</script>
+<script src="../recipes.js"></script>
+<script src="../recipe-engine.js"></script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js').catch(console.error);
+    });
+  }
+</script>
+</body>
+</html>

@@ -35,5 +35,15 @@ const RECIPES = [
     skill:    "medium",
     added:    "2026-08-15",
     image:    "images/korean-beef-bok-choy-bowl.jpg",
+  },
+  {
+    slug:     "instant-pot-crack-chicken",
+    title:    "Instant Pot Crack Chicken",
+    tags:     ["chicken", "instant-pot", "pressure-cooker", "weeknight", "kid-friendly"],
+    prepMins: 12,
+    cookMins: 30,
+    serves:   8,
+    skill:    "easy",
+    added:    "2026-08-18",
   }
 ];
