@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Dutch Oven Pork Carnitas</title>
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400;1,700&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+<div class="tabs">
+  <button class="tab active" onclick="showTab('recipe')">Recipe</button>
+  <button class="tab" onclick="showTab('mise')">Mise en Place</button>
+  <button class="tab" onclick="showTab('cook')">Cook</button>
+</div>
+
+<div class="panel active" id="panel-recipe">
+  <div class="recipe-title-block">
+    <span class="recipe-tag">Mexican · Braised · Tacos</span>
+    <h1 class="recipe-main-title">Dutch Oven Pork Carnitas</h1>
+    <div class="recipe-meta-row">
+      <div class="meta-item"><span class="meta-label">Prep</span><span class="meta-value">20 min</span></div>
+      <div class="meta-item"><span class="meta-label">Cook</span><span class="meta-value">4 hr 20 min</span></div>
+      <div class="meta-item"><span class="meta-label">Total</span><span class="meta-value">4 hr 40 min</span></div>
+      <div class="meta-item"><span class="meta-label">Serves</span><span class="meta-value"><span id="serves-display">18</span></span></div>
+      <div class="meta-item"><span class="meta-label">Skill</span><span class="meta-value">Medium</span></div>
+    </div>
+    <div class="scale-row">
+      <span class="scale-label">Scale</span>
+      <div class="scale-pills">
+        <button class="scale-pill" data-scale="0.5" onclick="setScale(0.5)">½×</button>
+        <button class="scale-pill active" data-scale="1" onclick="setScale(1)">1×</button>
+        <button class="scale-pill" data-scale="2" onclick="setScale(2)">2×</button>
+      </div>
+    </div>
+  </div>
+  <div class="recipe-hero" id="recipe-hero"></div>
+  <div class="recipe-panel">
+    <p class="recipe-source" id="recipe-source"></p>
+    <p class="intro-text">Classic braised-then-fried carnitas, built for a full bone-in pork shoulder in a Dutch oven. Orange and lime keep the braising liquid bright while four hours in a low oven does the real work; a two-stage broil crisps the edges without drying out the middle. An optional stovetop pan-reduce finish gets you there too, if you'd rather skip the broiler. Built for taco night with a crowd, with plenty left over to freeze.</p>
+    <div class="section-head">Ingredients</div>
+    <ul class="ingredients-list" id="recipe-ing-list"></ul>
+    <div class="section-head">Directions</div>
+    <ol class="directions-list" id="recipe-dir-list"></ol>
+    <div class="section-head">Notes</div>
+    <ul class="notes-list">
+      <li>Adding the bone to the braise gives the liquid noticeably more body — worth doing every time. Pick any extra meat off it before discarding.</li>
+      <li><strong>Optional finishing method: strain and pan-reduce</strong> (in place of steps 5–7). After the 4-hour braise, remove the bone, bay leaves, orange halves, and onion and discard — leave the garlic in. Return the meat, still in whole chunks (don't shred yet — it's fine if it's fallen apart a little), to the pot with the remaining liquid. Simmer uncovered over medium-high heat, stirring occasionally, until the liquid cooks off and the chunks start frying and browning in their own rendered fat, about 15–25 minutes depending on how much liquid is left. Once well browned on the cut edges, remove from heat, pull the chunks apart into shreds right in the pot, and serve.</li>
+      <li>If using the pan-reduce method, keep the meat in chunks (not shredded) until after browning — shredded meat has too much surface area and turns dry and stringy over that much reduction time.</li>
+      <li>Garlic cloves are fine left in through either finishing method — they soften further and add flavor; some may melt into the fat.</li>
+      <li>The onion should come out before either finishing step — left in that long, it turns slimy and stringy.</li>
+      <li>If your Dutch oven can't fit all 9 lbs comfortably, cut chunks a bit smaller rather than crowding — you want braising liquid touching most of the meat.</li>
+      <li>Reserve a little extra fat and liquid before finishing either way, in case the meat needs moistening again at serving time. It also freezes well for the next batch.</li>
+    </ul>
+    <div class="section-head">To Serve</div>
+    <ul class="notes-list">
+      <li>Double up corn tortillas — two per taco. Corn tears more easily than flour, so stacking gives structural integrity.</li>
+      <li>Warm tortillas properly — a few seconds directly over a gas flame or in a dry hot skillet until they blister slightly. This is what makes corn tortillas taste right, not just soft.</li>
+      <li>Diced white onion and cilantro — the classic simple topping, lets the carnitas be the star.</li>
+      <li>Salsa verde or salsa roja — verde (tomatillo) cuts through the richness of the fat nicely.</li>
+      <li>Lime wedges on the side.</li>
+      <li>Pickled red onion for acidity and crunch beyond raw onion — quick-pickle sliced red onion in lime juice and salt while the pork braises.</li>
+      <li>Crumbled queso fresco or cotija if you want a little more richness and saltiness.</li>
+      <li>Diced pineapple is optional but great with the citrus-braised flavor — leans a bit more al pastor.</li>
+      <li>Beyond straight tacos: the same fillings work well piled into a torta, scattered over crispy tostadas with refried beans underneath, or as nachos.</li>
+    </ul>
+    <button class="print-btn" onclick="window.print()">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+      Print Recipe
+    </button>
+  </div>
+</div>
+
+<div class="panel" id="panel-mise">
+  <div class="mise-panel">
+    <div class="mise-progress-wrap">
+      <div class="mise-progress-label">
+        <span>Prep Progress</span>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span id="mise-count">0 / 12</span>
+          <button class="mise-reset" onclick="resetMise()">Reset</button>
+        </div>
+      </div>
+      <div class="mise-bar"><div class="mise-bar-fill" id="mise-bar-fill"></div></div>
+    </div>
+    <p class="mise-intro">Check off each ingredient as you measure and prep. Get everything ready before the pot goes on heat.</p>
+    <ul class="mise-list" id="mise-list"></ul>
+  </div>
+</div>
+
+<div class="panel" id="panel-cook">
+  <div class="cook-panel">
+    <div class="cook-progress-bar"><div class="cook-progress-fill" id="cook-progress-fill"></div></div>
+    <div class="cook-steps-container" id="cook-container">
+      <div class="cook-steps-track" id="cook-track"></div>
+      <div class="swipe-hint">← swipe →</div>
+    </div>
+    <div class="cook-nav">
+      <button class="cook-nav-btn" id="cook-prev" onclick="cookNav(-1)" disabled>←</button>
+      <div class="cook-step-counter"><em id="cook-cur">1</em> / <span id="cook-total">8</span></div>
+      <button class="cook-nav-btn" id="cook-next" onclick="cookNav(1)">→</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const INGREDIENTS = [
+  { group:"", qty:9,     unit:"lb",    name:"pork shoulder, bone in, cut into 3–4\" chunks (bone reserved)" },
+  { group:"", qty:3,     unit:"tbsp",  name:"kosher salt" },
+  { group:"", qty:2,     unit:"tbsp",  name:"ground cumin" },
+  { group:"", qty:2,     unit:"tbsp",  name:"dried oregano (mexican, if you have it)" },
+  { group:"", qty:1,     unit:"tsp",   name:"ground cinnamon" },
+  { group:"", qty:2,     unit:"tbsp",  name:"chile powder (ancho or guajillo)" },
+  { group:"", qty:8,     unit:"cloves",name:"garlic, smashed" },
+  { group:"", qty:1,     unit:"",      name:"large yellow onion, quartered" },
+  { group:"", qty:4,     unit:"",      name:"bay leaves" },
+  { group:"", qty:2,     unit:"",      name:"oranges, juiced (squeezed halves reserved)" },
+  { group:"", qty:2,     unit:"",      name:"limes, juiced" },
+  { group:"", qty:3,     unit:"cup",   name:"chicken broth or water" },
+];
+
+const COOK_STEPS = [
+  [
+    { t:"t", v:"Toss the " },
+    { t:"i", i:0, frac:1 },
+    { t:"t", v:" with the " },
+    { t:"i", i:1, frac:1 },
+    { t:"t", v:", " },
+    { t:"i", i:2, frac:1 },
+    { t:"t", v:", " },
+    { t:"i", i:3, frac:1 },
+    { t:"t", v:", " },
+    { t:"i", i:4, frac:1 },
+    { t:"t", v:", and " },
+    { t:"i", i:5, frac:1 },
+    { t:"t", v:", coating all sides well." },
+  ],[
+    { t:"t", v:"Add the seasoned pork along with the reserved bone, " },
+    { t:"i", i:6, frac:1 },
+    { t:"t", v:", " },
+    { t:"i", i:7, frac:1 },
+    { t:"t", v:", " },
+    { t:"i", i:8, frac:1 },
+    { t:"t", v:", the squeezed orange halves, " },
+    { t:"i", i:9, frac:1 },
+    { t:"t", v:", " },
+    { t:"i", i:10, frac:1 },
+    { t:"t", v:", and " },
+    { t:"i", i:11, frac:1 },
+    { t:"t", v:" to the Dutch oven. Liquid should come about halfway up the meat — top up with extra water or broth if needed." },
+  ],[
+    { t:"t", v:"Set the pot over medium-high heat on the stovetop and bring to a gentle simmer, uncovered, about " },
+    { t:"s", v:"10 minutes" },
+    { t:"t", v:"." },
+  ],[
+    { t:"t", v:"Cover and transfer to a " },
+    { t:"s", v:"300°F oven" },
+    { t:"t", v:". Cook until the pork shreds easily with a fork, about " },
+    { t:"s", v:"4 hours" },
+    { t:"t", v:"." },
+  ],[
+    { t:"t", v:"Remove the pork and bone, discard the bay leaves and orange halves. Shred the meat, skimming and reserving some of the fat and braising liquid from the pot." },
+  ],[
+    { t:"t", v:"Spread the shredded pork on a sheet pan, spoon over some reserved fat and liquid so it's moist but not soupy, and broil until the edges crisp and char, about " },
+    { t:"s", v:"7 minutes" },
+    { t:"t", v:"." },
+  ],[
+    { t:"t", v:"Toss the pork, spoon over a bit more liquid, and broil a second round for extra crispy bits throughout, about " },
+    { t:"s", v:"5 minutes" },
+    { t:"t", v:"." },
+  ],[
+    { t:"t", v:"Pile into warm tortillas and serve — see the Notes below for topping ideas." },
+  ],
+];
+
+const DIRECTIONS = [
+  `Toss the <span class="ing-inline">pork</span> with the <span class="ing-inline">salt</span>, <span class="ing-inline">cumin</span>, <span class="ing-inline">oregano</span>, <span class="ing-inline">cinnamon</span>, and <span class="ing-inline">chile powder</span>, coating all sides well.`,
+  `Add the seasoned pork and its bone to the Dutch oven with the <span class="ing-inline">garlic</span>, <span class="ing-inline">onion</span>, <span class="ing-inline">bay leaves</span>, squeezed orange halves, <span class="ing-inline">orange juice</span>, <span class="ing-inline">lime juice</span>, and <span class="ing-inline">broth</span>. Liquid should come about halfway up the meat — top up with extra water or broth if needed.`,
+  `Bring to a simmer over medium-high heat on the stovetop, uncovered, about 10 minutes.`,
+  `Cover and transfer to a 300°F oven. Braise until the pork shreds easily with a fork, about 4 hours.`,
+  `Remove the pork and bone; discard the bay leaves and orange halves. Shred the meat, skimming and reserving some of the fat and braising liquid.`,
+  `Spread the shredded pork on a sheet pan, spoon over some reserved fat and liquid to keep it moist but not soupy, and broil until the edges crisp and char, about 7 minutes.`,
+  `Toss, spoon over a bit more liquid, and broil a second round for extra crispy bits throughout, about 5 minutes.`,
+  `Pile into warm tortillas and serve — see Notes for topping ideas.`,
+];
+
+const SOURCE = "";
+
+const BASE_SERVES = 18;
+</script>
+<script src="../recipes.js"></script>
+<script src="../recipe-engine.js"></script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js').catch(console.error);
+    });
+  }
+</script>
+</body>
+</html>

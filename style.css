@@ -262,6 +262,18 @@ html, body {
 
 .ing-inline { font-weight: 500; color: var(--rust); }
 
+.notes-list { list-style: none; margin-bottom: 36px; }
+
+.notes-list li {
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 14px;
+  line-height: 1.65;
+  color: #3a3028;
+}
+
+.notes-list li:last-child { border-bottom: none; }
+
 .print-btn {
   display: flex;
   align-items: center;

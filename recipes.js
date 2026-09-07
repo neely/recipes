@@ -45,5 +45,16 @@ const RECIPES = [
     serves:   8,
     skill:    "easy",
     added:    "2026-08-18",
+  },
+  {
+    slug:     "dutch-oven-pork-carnitas",
+    title:    "Dutch Oven Pork Carnitas",
+    tags:     ["pork", "mexican", "tacos", "braised", "crowd"],
+    prepMins: 20,
+    cookMins: 260,
+    serves:   18,
+    skill:    "medium",
+    added:    "2026-09-07",
+    image:    "images/dutch-oven-pork-carnitas.jpg",
   }
 ];
